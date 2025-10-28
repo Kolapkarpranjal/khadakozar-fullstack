@@ -20,8 +20,12 @@ app.use(helmet());
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
-    : ['http://localhost:3000'],
+    ? [
+        'https://khadakozar-fullstack-production.up.railway.app',
+        'https://khadak-ozar-grampanchayat.netlify.app',
+        'https://yourdomain.com'
+      ] 
+    : ['http://localhost:3000', 'http://localhost:5000'],
   credentials: true
 }));
 
