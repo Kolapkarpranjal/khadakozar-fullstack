@@ -291,11 +291,26 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
             transition: all 0.3s;
             border-top: 4px solid;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .stats-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stats-card .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stats-card .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
         }
         
         .stats-card.total { border-top-color: #10b981; }
@@ -370,6 +385,7 @@
             }
             .main-content {
                 margin-left: 0;
+                padding: 0.5rem !important;
             }
             
             /* Login Card Mobile */
@@ -391,31 +407,85 @@
             .top-bar {
                 padding: 0.75rem 1rem;
                 flex-wrap: wrap;
+                gap: 0.5rem;
             }
             .top-bar h2 {
-                font-size: 1.25rem !important;
+                font-size: 1.1rem !important;
+                margin: 0 !important;
+            }
+            .logout-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Dashboard Container Mobile */
+            .dashboard-container {
+                padding: 0.75rem !important;
             }
             
             /* Stats Cards Mobile - Stack Vertically */
-            .stats-container {
+            .grid {
                 display: block !important;
             }
-            .stat-card {
+            .stats-card {
                 margin-bottom: 1rem;
                 min-width: auto !important;
+                padding: 1.25rem;
+            }
+            .stats-card .stat-number {
+                font-size: 1.75rem;
+            }
+            .stats-card .stat-label {
+                font-size: 0.813rem;
+            }
+            
+            /* Section Cards Mobile */
+            .bg-white {
+                margin-bottom: 1rem;
+                border-radius: 8px;
+            }
+            .p-6, .px-6, .py-6 {
+                padding: 1rem !important;
+            }
+            .mb-8 {
+                margin-bottom: 1.5rem !important;
+            }
+            .mb-6 {
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Headings Mobile */
+            .text-3xl {
+                font-size: 1.5rem !important;
+            }
+            .text-2xl {
+                font-size: 1.25rem !important;
+            }
+            .text-xl {
+                font-size: 1.125rem !important;
+            }
+            .text-lg {
+                font-size: 1rem !important;
             }
             
             /* Table Mobile - Horizontal Scroll */
             .table-container {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                margin: -1rem;
+                padding: 1rem;
             }
             table {
-                min-width: 800px;
-                font-size: 0.875rem;
+                min-width: 700px;
+                font-size: 0.813rem;
             }
-            th, td {
-                padding: 0.5rem !important;
+            th {
+                padding: 0.625rem 0.5rem !important;
+                font-size: 0.75rem;
+            }
+            td {
+                padding: 0.75rem 0.5rem !important;
+                font-size: 0.813rem;
             }
             
             /* Buttons Mobile - Stack */
