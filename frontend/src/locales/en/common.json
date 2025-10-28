@@ -1,0 +1,685 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "samiti": "Samiti",
+    "yojna": "Shaskiya Yojna",
+    "digital": "Digital Grampanchayat",
+    "gallery": "Photo and Video Gallery",
+    "upakaram": "Upakaram",
+    "puraskar": "Puraskar"
+  },
+  "samiti": {
+    "overview": {
+      "description": "Our village has various committees working for the development and welfare of the community. Each committee focuses on specific areas to ensure comprehensive growth and better services for all residents."
+    },
+    "janArogyaSamiti": {
+      "title": "Jan Arogya Samiti",
+      "pageTitle": "Jan Arogya Samiti - Health Committee",
+      "subtitle": "Promoting Health and Wellness in Our Village",
+      "description": "The Jan Arogya Samiti is dedicated to providing comprehensive healthcare services and promoting health awareness among all villagers. Our committee works tirelessly to ensure the well-being of every community member through various health initiatives and programs.",
+      "additionalInfo": "We focus on preventive healthcare, maternal and child health, immunization programs, and health education to create a healthier community for all residents.",
+      "committeeInfo": "Committee Information",
+      "responsibilities": "Key Responsibilities",
+      "responsibilitiesList": [
+        "Organize regular health camps and medical check-ups",
+        "Conduct immunization programs for children and adults",
+        "Provide health education and awareness programs",
+        "Monitor maternal and child health services",
+        "Ensure proper sanitation and hygiene practices",
+        "Coordinate with government health departments",
+        "Maintain health records and statistics",
+        "Provide emergency health assistance when needed"
+      ],
+      "healthServices": "Health Services Provided",
+      "healthServicesList": [
+        "Primary Healthcare Services",
+        "Maternal and Child Health",
+        "Immunization Programs",
+        "Health Education and Awareness",
+        "Sanitation and Hygiene Programs",
+        "Emergency Health Assistance",
+        "Health Record Maintenance",
+        "Community Health Monitoring"
+      ],
+      "members": "Committee Members",
+      "healthTips": "Health Tips for Village Residents",
+      "healthTipsList": [
+        "Drink clean and safe water daily",
+        "Maintain personal hygiene and cleanliness",
+        "Eat a balanced diet with fresh vegetables and fruits",
+        "Exercise regularly and stay physically active",
+        "Get regular health check-ups and vaccinations",
+        "Practice safe food handling and storage",
+        "Keep your surroundings clean and waste-free",
+        "Seek medical help immediately when feeling unwell"
+      ]
+    },
+    "krishiVikasSamiti": {
+      "title": "Krishi Vikas Samiti",
+      "pageTitle": "Krishi Vikas Samiti - Agriculture Development Committee",
+      "subtitle": "Promoting Agricultural Development and Farmer Welfare",
+      "description": "The Krishi Vikas Samiti is dedicated to promoting agricultural development, modern farming techniques, and ensuring the welfare of farmers in our village. Our committee works towards sustainable agriculture and improved farming practices.",
+      "members": "Committee Members"
+    },
+    "shaleyVyavasthapanSamiti": {
+      "title": "Shaley Vyavasthapan Samiti",
+      "pageTitle": "Shaley Vyavasthapan Samiti - School Management Committee",
+      "description": "The Shaley Vyavasthapan Samiti is responsible for the proper management and administration of schools in our village. Our committee ensures quality education, proper infrastructure, and effective school operations for the benefit of all students.",
+      "additionalInfo": "We focus on teacher recruitment, educational materials, school development, and maintaining high standards of education in our village schools.",
+      "committeeInfo": "Committee Information",
+      "responsibilities": "Key Responsibilities",
+      "responsibilitiesList": [
+        "Ensure proper management and administration of schools",
+        "Recruit and manage qualified teachers",
+        "Provide necessary educational materials and resources",
+        "Plan and implement school development programs",
+        "Monitor school performance and student progress",
+        "Coordinate with education department officials",
+        "Maintain school infrastructure and facilities",
+        "Organize educational events and programs"
+      ],
+      "members": "Committee Members"
+    },
+    "rastaArakhaSamiti": {
+      "title": "Rasta Arakha Samiti",
+      "pageTitle": "Rasta Arakha Samiti - Road Development Committee",
+      "subtitle": "Building Better Roads for Better Connectivity",
+      "description": "The Rasta Arakha Samiti is responsible for the development, maintenance, and improvement of roads and transportation infrastructure in our village. Our committee ensures safe and efficient road connectivity for all residents.",
+      "additionalInfo": "We focus on road construction, maintenance, safety measures, and ensuring proper connectivity throughout the village for the benefit of all residents.",
+      "committeeInfo": "Committee Information",
+      "responsibilities": "Key Responsibilities",
+      "responsibilitiesList": [
+        "Maintain and repair existing village roads",
+        "Plan and construct new roads for better connectivity",
+        "Ensure proper road maintenance and cleanliness",
+        "Implement safety measures on village roads",
+        "Coordinate with government road departments",
+        "Monitor road construction projects",
+        "Ensure proper drainage and water management",
+        "Organize road safety awareness programs"
+      ],
+      "roadServices": "Road Development Services",
+      "roadServicesList": [
+        "Road Construction and Repair",
+        "Bridge and Culvert Construction",
+        "Road Safety Measures",
+        "Drainage System Maintenance",
+        "Street Lighting Installation",
+        "Road Signage and Markings",
+        "Traffic Management",
+        "Emergency Road Services"
+      ],
+      "members": "Committee Members",
+      "roadSafetyTips": "Road Safety Tips for Village Residents",
+      "roadSafetyTipsList": [
+        "Always follow traffic rules and speed limits",
+        "Use proper lighting when walking on roads at night",
+        "Keep roads clean and free from debris",
+        "Report any road damage or safety hazards immediately",
+        "Use designated pedestrian crossings",
+        "Avoid parking vehicles on main roads",
+        "Maintain proper distance while driving",
+        "Wear helmets while riding two-wheelers"
+      ]
+    },
+    "mahimAhilyadeviLokSanchalitSadhanKendra": {
+      "title": "Mahim Ahilyadevi Lok Sanchalit Sadhan Kendra",
+      "pageTitle": "Mahim Ahilyadevi Lok Sanchalit Sadhan Kendra",
+      "subtitle": "Community Resource Center - Community Development",
+      "description": "Mahim Ahilyadevi Lok Sanchalit Sadhan Kendra is dedicated to community development and social welfare in the village. This center provides comprehensive services to all residents.",
+      "additionalInfo": "Our center organizes various programs for social justice, women empowerment, youth development, and community welfare.",
+      "committeeInfo": "Committee Information",
+      "objectives": "Objectives",
+      "objectivesList": [
+        "Community development and social welfare",
+        "Women empowerment programs",
+        "Youth development and employment generation",
+        "Education and skill development",
+        "Health and wellness awareness",
+        "Environmental conservation",
+        "Social justice and equality"
+      ],
+      "services": "Services",
+      "servicesList": [
+        "Social welfare programs",
+        "Women empowerment",
+        "Youth development",
+        "Educational assistance",
+        "Health services",
+        "Skill development",
+        "Employment guidance",
+        "Legal assistance"
+      ],
+      "members": "Committee Members",
+      "membersList": [],
+      "bachatGat": "Savings Groups",
+      "srNo": "Sr. No.",
+      "groupName": "Group Name",
+      "presidentName": "President Name",
+      "secretary": "Secretary",
+      "memberCount": "Member Count",
+      "remarks": "Remarks",
+      "contactInfo": "Contact Information",
+      "address": "Address",
+      "addressValue": "Khadak Ozar, Taluka: Nashik, District: Nashik, Maharashtra",
+      "phone": "Phone",
+      "phoneValue": "9876543210",
+      "email": "Email",
+      "emailValue": "info@khadakozar.gov.in"
+    },
+    "gramSansadhanGat": {
+      "title": "Gram Sansadhan Gat",
+      "pageTitle": "Gram Sansadhan Gat",
+      "subtitle": "Village Resource Group - Village Development",
+      "description": "Gram Sansadhan Gat is responsible for resource management and local development in the village. This group manages all village resources properly.",
+      "additionalInfo": "Our group works for comprehensive village development by properly managing natural resources, human resources, and financial resources in the village.",
+      "committeeInfo": "Committee Information",
+      "functions": "Functions",
+      "functionsList": [
+        "Management of village resources",
+        "Local development planning",
+        "Natural resource conservation",
+        "Human resource development",
+        "Financial resource management",
+        "Community development",
+        "Environmental protection",
+        "Local industry development"
+      ],
+      "activities": "Activities",
+      "activitiesList": [
+        "Resource survey",
+        "Development plan preparation",
+        "Community participation",
+        "Skill development programs",
+        "Entrepreneurship development",
+        "Environmental awareness",
+        "Social welfare",
+        "Financial assistance"
+      ],
+      "members": "Committee Members",
+      "membersList": [],
+      "benefits": "Benefits",
+      "benefitsList": [
+        "Proper management of village resources",
+        "Promotion of local development",
+        "Increased community participation",
+        "Economic stability",
+        "Environmental protection",
+        "Skill development",
+        "Employment generation",
+        "Social welfare"
+      ]
+    }
+  },
+  "home": {
+    "title": "Welcome to Grampanchayat Khadakozar",
+    "subtitle": "Serving the community with dedication",
+    "banner": {
+      "loading": "Loading banners...",
+      "noBanners": "No banners available",
+      "checkConfig": "Please check banner configuration"
+    },
+    "members": {
+      "title": "Committee Members"
+    },
+    "aboutEvents": {
+      "title": "About Events & Activities",
+      "description": "Stay updated with the latest events, activities, and initiatives organized by our Gram Panchayat.",
+      "communityEvents": "Community Events",
+      "communityEventsDesc": "Regular community gatherings, festivals, and cultural programs.",
+      "developmentPrograms": "Development Programs",
+      "developmentProgramsDesc": "Infrastructure development and welfare programs for the village.",
+      "educationInitiatives": "Education Initiatives",
+      "educationInitiativesDesc": "Educational programs and skill development workshops.",
+      "viewAllEvents": "View All Events",
+      "aboutUs": {
+        "title": "About Us",
+        "content": "Grampanchayat Khadakozar is committed to serving the community with dedication and transparency. We work towards the development and welfare of our village through various government schemes and initiatives. Our mission is to provide quality services to all residents and ensure the overall progress of our village.",
+        "readMore": "Read More"
+      }
+    },
+    "quickLinks": {
+      "title": "Quick Links"
+    }
+  },
+  "about": {
+    "title": "About My Village",
+    "imageAlt": "Khadakozar Grampanchayat",
+    "villageOverview": {
+      "title": "Khadakozar Village - A Glance",
+      "description": "Khadakozar Grampanchayat is a rural self-government institution under Nashik Zilla Parishad, Chandwad Panchayat Samiti. The village has a population of 3487, with Khadakozar being the main village and Gurhale settlement being separate."
+    },
+    "statistics": {
+      "title": "🌾 Grampanchayat Area",
+      "items": [
+        { "value": "1022.85 sq km", "label": "Grampanchayat Area" },
+        { "value": "4", "label": "🏢 Wards" },
+        { "value": "673", "label": "👥 Family Count" },
+        { "value": "1784", "label": "👥 Male Population" },
+        { "value": "1703", "label": "👥 Female Population" },
+        { "value": "3487", "label": "👥 Total Population" }
+      ]
+    },
+    "facilities": {
+      "title": "🦸🏼 Village Facilities",
+      "categories": [
+        {
+          "title": "Water Supply",
+          "items": [
+            "Individual tap connections for families under 'Har Ghar Jal Har Ghar Nal' scheme"
+          ]
+        },
+        {
+          "title": "Health",
+          "items": [
+            "Health Sub Center"
+          ]
+        },
+        {
+          "title": "Drinking Water",
+          "items": [
+            "RO ATM facility"
+          ]
+        },
+        {
+          "title": "Weather Center",
+          "items": [
+            "Weather information available on mobile phones in the village"
+          ]
+        },
+        {
+          "title": "Education",
+          "items": [
+            "Primary school 1 to 7 Z.P. School and 5 to 10 Secondary School"
+          ]
+        },
+        {
+          "title": "Women and Child Welfare",
+          "items": [
+            "Anganwadi Centers - 5 available"
+          ]
+        },
+        {
+          "title": "Telecommunications",
+          "items": [
+            "Telephone facility and internet connectivity available"
+          ]
+        },
+        {
+          "title": "Social Community Hall",
+          "items": [
+            "3 social community halls in the village where public programs, weddings, annual rituals, and religious ceremonies are held"
+          ]
+        },
+        {
+          "title": "Cremation Ground",
+          "items": [
+            "Cremation ground shed and funeral ritual shed available"
+          ]
+        },
+        {
+          "title": "CCTV",
+          "items": [
+            "CCTV cameras installed throughout the village for surveillance"
+          ]
+        },
+        {
+          "title": "Gymnasium",
+          "items": [
+            "Separate gymnasium building available in Khadakozar village"
+          ]
+        },
+        {
+          "title": "Public Sports Ground",
+          "items": [
+            "Separate ground for cricket and other sports in the village"
+          ]
+        },
+        {
+          "title": "Aaple Sarkar Service Center - Setu Center",
+          "items": [
+            "One Setu center in Khadakozar village providing certificates and online facilities at one place"
+          ]
+        }
+      ]
+    },
+    "distance": {
+      "title": "Distance Information",
+      "items": [
+        { "location": "From Nashik", "distance": "50 km" },
+        { "location": "From Chandwad", "distance": "20 km" },
+        { "location": "Nearest Railway Station: Kundewadi", "distance": "26 km" },
+        { "location": "Nashik Road", "distance": "50 km" },
+        { "location": "Ozar Airport", "distance": "36 km" }
+      ]
+    },
+    "agriculture": {
+      "title": "Land and Agriculture Area",
+      "landInfo": {
+        "title": "Village Total Area",
+        "items": [
+          { "label": "Village Total Area", "value": "448.14 hectares" },
+          { "label": "Irrigated Area", "value": "370.25" },
+          { "label": "Non-irrigated Area", "value": "28.00" },
+          { "label": "Number of Landholders", "value": "498" }
+        ]
+      },
+      "areaInfo": {
+        "title": "Village Area Details",
+        "items": [
+          { "label": "Total Area", "value": "394.37 hectares" },
+          { "label": "Village Settlement Area", "value": "3.39 hectares" },
+          { "label": "Cultivable Area", "value": "354.11 hectares" },
+          { "label": "Average Annual Rainfall", "value": "1000 mm" }
+        ]
+      },
+      "crops": {
+        "title": "Main Crops",
+        "items": [
+          "Grapes, Sugarcane, Pomegranate, Onion, Tomato, Capsicum and other vegetables",
+          "Large scale grape orchards in the village",
+          "Solar dryers for women entrepreneurship development"
+        ]
+      }
+    },
+    "attractions": {
+      "title": "Tourist Attractions",
+      "places": [
+        {
+          "name": "Kedrai Mata Dam",
+          "description": "Kedrai Mata Dam is a dam located near Khadakozar village in Chandwad taluka of Nashik district, built on the Vinta river and famous for the Kedrai Mata temple. The sacred shrine of Mata Kedrai is located right next to this dam. This dam provides water supply to the villages in the surrounding area.",
+          "image": "/images/about/dharan.jpg",
+          "features": {
+            "title": "Dam and Surroundings",
+            "items": [
+              "Location: Kedrai Mata Dam is located near Khadakozar village in Chandwad taluka of Nashik district",
+              "River: This dam is built on the Vinta river",
+              "Reason for Fame: Due to its proximity to the temple, this dam is named Kedrai Mata Dam",
+              "Water Supply: This dam provides water supply as a water source to Jopul, Khadakozar, Vadali Bhoi and surrounding villages in the Panchkroshi area"
+            ]
+          }
+        },
+        {
+          "name": "Kedrai Mata Temple Khadakozar",
+          "description": "Famous Kedrai Mata is a sacred shrine located about two kilometers from Khadakozar village in Chandwad taluka. This shrine is located 6 km from Vadali Bhoi village on Mumbai-Agra National Highway No. 3. There is a huge crowd here on Purnima, Amavasya, Tuesday, Friday and Sunday. Devotees have had faith since ancient times that if couples do not have children/sons, their wishes are fulfilled by taking a bath seven times in the sacred pond here. This goddess is famous for fulfilling vows.",
+          "images": [
+            "/images/about/mata1.jpg",
+            "/images/about/mata2.jpg",
+            "/images/about/mata3.jpg",
+            "/images/about/mata4.jpg"
+          ],
+          "features": {
+            "title": "Temple Features",
+            "items": [
+              "Ancient Shani, Rahu, Ketu temples near Kedrai Mata temple",
+              "Four-faced Hanuman idol is very beautiful",
+              "Shivling in the nearby temple",
+              "Ancient dipmal (Shivkalin) on the hill in front",
+              "Banyan and Peepal trees in the temple premises add to the glory of the shrine",
+              "Peaceful, beautiful and pleasant shrine located on the banks of Vinta river",
+              "Famous as Kedrai Mata Dam"
+            ]
+          },
+          "festivals": {
+            "title": "Festivals and Celebrations",
+            "items": [
+              "Goddess's chariot from the shrine to Khadakozar village with great pomp on Chaitra Vaishakh Navami",
+              "All villagers and devotees from Panchkroshi gather in large numbers",
+              "Thousands of devotees visit the mother's feet daily during Navratrotsav",
+              "Electric lighting and religious program organization"
+            ]
+          },
+          "pilgrimages": {
+            "title": "Walking Pilgrimages",
+            "items": [
+              "Kedrai to Shirdi",
+              "Kedrai to Ganagapur",
+              "Kedrai to Jambukeshwar"
+            ]
+          }
+        },
+        {
+          "name": "Village Lake",
+          "description": "Beautiful lake surrounded by greenery, perfect for picnics and nature walks.",
+          "features": {
+            "title": "Activities",
+            "items": [
+              "Boating",
+              "Fishing",
+              "Nature Photography"
+            ]
+          }
+        }
+      ]
+    },
+    "specialFeatures": {
+      "title": "Special Features",
+      "items": [
+        "Kedrai Mata is a famous awakened temple in Khadakozar village, Chandwad taluka, Nashik district, Maharashtra. Located 6 km from Wadali Bhoy village on Mumbai-Agra National Highway No. 3, this temple sees huge crowds on Amavasya, Purnima, Tuesday, Friday and Sunday. It is known for fulfilling wishes.",
+        "Ancient temples of Shani, Rahu, Ketu are located near Kedrai Mata temple. The four-faced Hanuman idol in front of Kedrai Mata is very beautiful and there is a Shivling in the nearby temple. Ancient Shivkalin deepmal can be seen on the hill in front of Kedrai Mata temple.",
+        "The temple is famous as Kedrai Mata Dam due to the dam next to the temple. The banyan and peepal trees in the temple premises add to the glory of the temple. This temple located on the banks of Vinta river is very peaceful, beautiful and pleasant.",
+        "Since ancient times, the goddess's chariot has been taken out with great pomp from the temple to Khadakozar village on Chaitra Vaishakh Navami. All villagers and devotees from Panch Kroshi gather in large numbers for this chariot procession. During Navratri, thousands of devotees visit the mother's feet daily.",
+        "During this period, the temple administration organizes electric lighting and religious programs. Similarly, foot pilgrimage festivals are held every year from the temple to Kedrai to Shirdi, Kedrai Mata to Gangapur, Kedrai Mata to Trimbakeshwar.",
+        "Saptashringi Fort is 28 km from Kedrai Mata temple and Renuka Mata temple in Chandwad is 22 km. Also in the lower eastern range of Sahyadri, near Saptashringi Fort, Markandeya Mountain, Dhodap Fort, Vikhara Mountain, Kanchan Fort, Idrayani Fort, Renuka Temple in Chandwad, Chandreshwar Temple, Ichhapurti Ganesh Temple, famous Rangmahal are historical places that can be seen at a distance of 20 to 25 km.",
+        "The distance to Shirdi is 70 to 75 km from here. No matter how much we talk about Kedrai Mata, it is less. We should visit this awakened temple and definitely take the mother's blessings.",
+        "The village has been running continuous Hari Nam Saptah for the last 90 years and this year in April 2025, it will complete 90 years continuously and we will celebrate the golden jubilee in another 10 years.",
+        "✨ Khadakozar – A small but ideal, prosperous village preserving historical heritage!",
+        "Are you ready to visit the village? If yes, go to the location below........"
+      ]
+    },
+    "villageFacilities": {
+      "title": "Village Facilities",
+      "schools": [
+        "District Primary Marathi School Khadak Ozar - (Classes 1 to 7)",
+        "District Primary Marathi School Gurhale (Classes 1 to 4)",
+        "Secondary School Khadak Ozar - (Classes 5 to 10)"
+      ],
+      "health": [
+        "Health Sub-Center – 01"
+      ],
+      "anganwadi": [
+        "Anganwadi Centers – 5 (1 Khadakozar, 2 Dr. Babasaheb Ambedkar Nagar, 3 Jamblicha Malla, 4 Vishnuwadi, 5 Gurhale)"
+      ]
+    },
+    "areaInfo": {
+      "title": "Village Area Information",
+      "items": [
+        { "label": "Total Area", "value": "394.37 hectares" },
+        { "label": "Village Settlement Area", "value": "3.39 hectares" },
+        { "label": "Cultivable Area", "value": "354.11 hectares" },
+        { "label": "Average Annual Rainfall", "value": "1000 mm" }
+      ]
+    },
+    "officials": {
+      "title": "Gram Panchayat Officials",
+      "dob": "Date of Birth",
+      "education": "Education",
+      "mobile": "Mobile",
+      "position": "Position",
+      "members": [
+        {
+          "name": "Sagar Vasantrao Pagar",
+          "dob": "15-03-1975",
+          "education": "Graduate",
+          "mobile": "9876543210",
+          "position": "Sarpanch"
+        },
+        {
+          "name": "Govind Tulshiram Pagar",
+          "dob": "22-08-1980",
+          "education": "12th Pass",
+          "mobile": "9876543211",
+          "position": "Deputy Sarpanch"
+        },
+        {
+          "name": "Roshan Balwant Suryavanshi",
+          "dob": "10-12-1985",
+          "education": "Graduate",
+          "mobile": "9876543212",
+          "position": "Gram Panchayat Officer"
+        }
+      ]
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "success": "Success",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "viewDetails": "View Details"
+  },
+  "upakaram": {
+    "title": "Awards & Recognition",
+    "subtitle": "Gram Panchayat Khadak Ozar Awards & Recognition",
+    "description": "Explore the various awards and recognition received by our Gram Panchayat.",
+    "additionalInfo": "Our Gram Panchayat has received numerous awards for excellent performance.",
+    "upakaramList": [
+      {
+        "id": 1,
+        "title": "TB Free Gram Panchayat Award",
+        "description": "TB Free Gram Panchayat Award 2023/2024 Received",
+        "image": "/images/award/award1.jpg",
+        "alt": "TB Free Gram Panchayat Award"
+      },
+      {
+        "id": 2,
+        "title": "Mahanagar Palika Nashik Award",
+        "description": "Award from Mahanagar Palika Nashik",
+        "image": "/images/award/award2.jpg",
+        "alt": "Mahanagar Palika Nashik Award"
+      }
+    ]
+  },
+  "digital": {
+    "taxCollection": {
+      "title": "Tax Collection Overview",
+      "year": "Tax Demand for Financial Year 2025/2026",
+      "houseTax": {
+        "title": "House Tax",
+        "scanner": {
+          "title": "House Tax Collection Scanner"
+        }
+      },
+      "waterTax": {
+        "title": "Water Tax",
+        "scanner": {
+          "title": "Water Tax Collection Scanner"
+        }
+      },
+      "rentTax": {
+        "title": "Rent Tax"
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "Email",
+      "gramPanchayatOfficer": "Gram Panchayat Officer",
+      "sarpanch": "Sarpanch",
+      "ambulance": "Ambulance & Vaikunth Rath"
+    }
+  },
+  "directory": {
+    "title": "Officials Directory",
+    "pageTitle": "Gram Panchayat Khadak Ozar - Officials Directory",
+    "filterText": "Filter by:",
+    "searchPlaceholder": "Search by name or designation...",
+    "filterButton": "Filter",
+    "noOfficialsFound": "No officials found",
+    "noOfficialsMessage": "No officials found matching your search criteria.",
+    "tableHeaders": {
+      "name": "Name",
+      "designation": "Designation",
+      "address": "Address"
+    },
+    "committees": {
+      "gramPanchayat": "Gram Panchayat",
+      "executiveCommittee": "Executive Committee"
+    },
+    "members": {
+      "gramPanchayat": {
+        "sagarVasantraoPagar": "Sagar Vasantrao Pagar",
+        "govindTulshiramPagar": "Govind Tulshiram Pagar",
+        "harshadJanardanPagar": "Harshad Janardan Pagar",
+        "devidasTatyabaPagar": "Devidas Tatyaba Pagar",
+        "sharadRamchandraBhavar": "Sharad Ramchandra Bhavar",
+        "shivajiChindhuGhodhade": "Shivaji Chindhu Ghodhade",
+        "sarikaAshokPagar": "Sarika Ashok Pagar",
+        "ratnaAtmaramPagar": "Ratna Atmaram Pagar",
+        "sonaliSunilBhavar": "Sonali Sunil Bhavar",
+        "arunaKhanderaoPagar": "Aruna Khanderao Pagar",
+        "laxmibaiChahaduSuryawanshi": "Laxmibai Chahadu Suryawanshi",
+        "priyankaShivanathKedare": "Priyanka Shivanath Kedare"
+      },
+      "executiveCommittee": {
+        "roshanBalwantSuryavanshi": "Roshan Balwant Suryavanshi",
+        "sushilRajendraKedare": "Sushil Rajendra Kedare",
+        "ganeshKeduPagar": "Ganesh Kedu Pagar",
+        "kailasRamdasPagar": "Kailas Ramdas Pagar",
+        "sahebraoNivrittiKank": "Sahebrao Nivritti Kank"
+      },
+      "janArogyaSamiti": {
+        "nagnathRamnathPagar": "Nagnath Ramnath Pagar",
+        "vijayKisanPagar": "Vijay Kisan Pagar",
+        "ajayaShivajiGavit": "Ajaya Shivaji Gavit",
+        "shobhanaAnandaraoDeshmukh": "Shobhana Anandarao Deshmukh",
+        "gyaneshwarNavnathKale": "Gyaneshwar Navnath Kale",
+        "mangalaBhausahebNagre": "Mangala Bhausaheb Nagre",
+        "manishaGanpatGirgaon": "Manisha Ganpat Girgaon",
+        "anjanaBandopantPagar": "Anjana Bandopant Pagar",
+        "ajayramBandopantMutha": "Ajayram Bandopant Mutha",
+        "harindraNanabhaoPagar": "Harindra Nanabhao Pagar",
+        "govindTulshiramPagar": "Govind Tulshiram Pagar",
+        "navnathKenuPagar": "Navnath Kenu Pagar"
+      },
+      "shaleySamiti": {
+        "ravindraRamnathPagar": "Ravindra Ramnath Pagar",
+        "sharadKisanPagar": "Sharad Kisan Pagar",
+        "namdevTukaramPagar": "Namdev Tukaram Pagar",
+        "punjaramKoshinathSuryavanshi": "Punjaram Koshinath Suryavanshi",
+        "chandrakantTulshiramPagar": "Chandrakant Tulshiram Pagar",
+        "sopanTulshiramPagar": "Sopan Tulshiram Pagar",
+        "nandkishorGangadharSaykar": "Nandkishor Gangadhar Saykar",
+        "sukdevPrabhakarGhopade": "Sukdev Prabhakar Ghopade",
+        "babajiBhimajiPagar": "Babaji Bhimaji Pagar",
+        "hanumantMadhavPagar": "Hanumant Madhav Pagar",
+        "ajayTrambakPagar": "Ajay Trambak Pagar",
+        "shivajiGopalPagar": "Shivaji Gopal Pagar",
+        "krishnaDinkarPagar": "Krishna Dinkar Pagar",
+        "govindTulshiramPagar": "Govind Tulshiram Pagar",
+        "sanjayMadhavraoChaute": "Sanjay Madhavrao Chaute",
+        "aditikaGanpatSaykar": "Aditika Ganpat Saykar",
+        "sujataSiddharthKedar": "Sujata Siddharth Kedar",
+        "kalyaniSantoshSonawane": "Kalyani Santosh Sonawane"
+      }
+    },
+    "designations": {
+      "sarpanch": "Sarpanch (Head of Village Council)",
+      "deputySarpanch": "Deputy Sarpanch (Deputy Head of Village Council)",
+      "member": "Member",
+      "femaleMember": "Member (Female)",
+      "gramPanchayatOfficer": "Gram Panchayat Officer",
+      "computerOperator": "Computer Operator",
+      "clerkVasuliKarkun": "Clerk Vasuli Karkun",
+      "gramRojgarSahayak": "Gram Rojgar Sahayak",
+      "waterSupplyEmployee": "Water Supply Employee",
+      "chairman": "Chairman",
+      "viceChairman": "Vice Chairman",
+      "healthWorker": "Health Worker",
+      "anganwadiSevika": "Anganwadi Sevika",
+      "anganwadiSevak": "Anganwadi Sevak",
+      "ashaMember": "ASHA Member",
+      "charanGarbhAsha": "Charan Garbh ASHA",
+      "upSarpanch": "Up Sarpanch",
+      "youthRepresentative": "Youth Representative",
+      "president": "President",
+      "vicePresident": "Vice President",
+      "tatSanchalak": "Tat Sanchalak",
+      "secretary": "Secretary",
+      "studentMember": "Student Member",
+      "specialInvitee": "Special Invitee",
+      "womanMember": "Woman Member"
+    }
+  }
+}

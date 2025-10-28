@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Global responsive adjustments */
+img, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make tables scrollable on small screens */
+.responsive-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Improve tap targets */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Reduce default focus ring on mobile and rely on Tailwind focus utilities */
+*:focus {
+  outline: none;
+}
+
+/* Custom Swiper pagination dots styling */
+.swiper-pagination {
+  position: absolute !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-radius: 50% !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.2) !important;
+}
