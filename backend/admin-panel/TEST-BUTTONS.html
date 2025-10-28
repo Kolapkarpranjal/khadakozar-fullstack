@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Test - Admin Panel</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f3f4f6;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #3b82f6;
+            color: white;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .info { color: #6b7280; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel Button Test</h1>
+    
+    <div class="test-box">
+        <h2>Test 1: Simple Alert</h2>
+        <button onclick="alert('Basic onclick works!')">Click Me</button>
+        <p class="info">If this shows an alert, basic onclick works.</p>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 2: Call Global Function</h2>
+        <button onclick="testFunction()">Test Global Function</button>
+        <p class="info">If this shows an alert, global functions work.</p>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 3: Window Function</h2>
+        <button onclick="window.viewSubmission('test123')">Test viewSubmission</button>
+        <p class="info">If this shows an alert or console log, viewSubmission is accessible.</p>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 4: Actual Table Button (like admin panel)</h2>
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="testTable">
+                <!-- Will be populated by JavaScript -->
+            </tbody>
+        </table>
+        <p class="info">Click buttons in the table - they should work.</p>
+    </div>
+    
+    <div id="results" class="test-box">
+        <h2>Console Output (check F12 Developer Console)</h2>
+        <div id="output"></div>
+    </div>
+    
+    <script>
+        // Define test function
+        function testFunction() {
+            alert('✅ Global function works!');
+            console.log('✅ Global function called');
+        }
+        
+        // Define viewSubmission (mock)
+        function viewSubmission(id) {
+            alert('✅ viewSubmission called with ID: ' + id);
+            console.log('✅ viewSubmission called with ID:', id);
+        }
+        
+        // Make it globally accessible
+        window.viewSubmission = viewSubmission;
+        window.testFunction = testFunction;
+        
+        // Log to console
+        console.log('✅ Functions loaded:', {
+            testFunction: typeof window.testFunction,
+            viewSubmission: typeof window.viewSubmission
+        });
+        
+        // Populate test table (like admin panel does)
+        const testData = [
+            { id: '123', name: 'Test User 1' },
+            { id: '456', name: 'Test User 2' }
+        ];
+        
+        const tbody = document.getElementById('testTable');
+        testData.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>
+                    <button onclick="viewSubmission('${item.id}')">पहा</button>
+                    <button onclick="alert('Update: ${item.id}')">अपडेट</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Display loaded status
+        document.getElementById('output').innerHTML = `
+            <p>✅ Functions loaded successfully</p>
+            <p>testFunction: ${typeof window.testFunction}</p>
+            <p>viewSubmission: ${typeof window.viewSubmission}</p>
+        `;
+    </script>
+</body>
+</html>
+
+
