@@ -1,5 +1,5 @@
 // Admin Panel JavaScript with Marathi Language Support
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://khadakozar-fullstack-production.up.railway.app/api';
 
 let currentToken = localStorage.getItem('adminToken');
 let currentPage = 1;
