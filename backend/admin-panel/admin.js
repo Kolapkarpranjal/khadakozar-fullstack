@@ -116,9 +116,17 @@ function showAdminPanel() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.querySelector('.main-content');
+    const overlay = document.getElementById('sidebarOverlay');
     
+    // Toggle sidebar classes
     sidebar.classList.toggle('collapsed');
+    sidebar.classList.toggle('open');
     mainContent.classList.toggle('expanded');
+    
+    // Toggle overlay for mobile
+    if (overlay) {
+        overlay.classList.toggle('active');
+    }
 }
 
 // Navigate to section

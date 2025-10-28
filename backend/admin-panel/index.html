@@ -357,16 +357,137 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
-        /* Responsive */
+        /* Responsive Styles - Enhanced for Mobile */
         @media (max-width: 768px) {
+            /* Sidebar Mobile Behavior */
             .sidebar {
                 transform: translateX(-100%);
+                width: 100%;
+                max-width: 280px;
             }
             .sidebar.open {
                 transform: translateX(0);
             }
             .main-content {
                 margin-left: 0;
+            }
+            
+            /* Login Card Mobile */
+            .login-card {
+                margin: 1rem;
+                width: calc(100% - 2rem) !important;
+            }
+            .login-header {
+                padding: 1.5rem;
+            }
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+            .login-header h2 {
+                font-size: 1rem;
+            }
+            
+            /* Top Bar Mobile */
+            .top-bar {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+            }
+            .top-bar h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            /* Stats Cards Mobile - Stack Vertically */
+            .stats-container {
+                display: block !important;
+            }
+            .stat-card {
+                margin-bottom: 1rem;
+                min-width: auto !important;
+            }
+            
+            /* Table Mobile - Horizontal Scroll */
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                min-width: 800px;
+                font-size: 0.875rem;
+            }
+            th, td {
+                padding: 0.5rem !important;
+            }
+            
+            /* Buttons Mobile - Stack */
+            .table-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .table-actions button {
+                width: 100%;
+                padding: 0.5rem;
+            }
+            
+            /* Filters Mobile */
+            .filter-container {
+                display: block !important;
+            }
+            .filter-container > div {
+                margin-bottom: 0.75rem;
+                width: 100%;
+            }
+            .filter-container select,
+            .filter-container input {
+                width: 100%;
+            }
+            
+            /* Pagination Mobile */
+            .pagination {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .pagination button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Modal Mobile */
+            .modal-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 1rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            /* Form Sections Mobile */
+            .form-section {
+                padding: 1rem;
+            }
+            .form-section h3 {
+                font-size: 1.1rem;
+            }
+            
+            /* Sidebar Navigation Mobile */
+            .nav-item {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Tablet Specific Styles */
+        @media (min-width: 640px) and (max-width: 1024px) {
+            .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+            
+            .stats-container {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                min-width: auto !important;
             }
         }
         
@@ -376,6 +497,24 @@
         
         @media (min-width: 1024px) {
             .lg\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+        }
+        
+        /* Mobile Overlay for Sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-overlay.active {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -410,6 +549,9 @@
 
     <!-- Main Admin Panel -->
     <div id="adminPanel" class="hidden">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+        
         <!-- Sidebar -->
         <div id="sidebar" class="sidebar">
             <div class="sidebar-header">
