@@ -67,7 +67,7 @@ export default function FerfarNondaniForm() {
       }
 
       // Submit to backend
-      const response = await fetch('http://localhost:5000/api/forms/submit', {
+      const response = await fetch('https://khadakozar-fullstack-production.up.railway.app/api/forms/submit', {
         method: 'POST',
         body: submitData
       });
