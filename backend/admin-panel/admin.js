@@ -158,13 +158,14 @@ function navigateToSection(section) {
     
     // Close sidebar on mobile after navigation
     const sidebar = document.getElementById('sidebar');
-    const mainContent = document.querySelector('.main-content');
     const overlay = document.getElementById('sidebarOverlay');
     
-    // Check if sidebar is open (on mobile)
-    if (sidebar.classList.contains('open')) {
+    // Check if we're on mobile and sidebar is open
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // On mobile, remove 'open' class to hide sidebar
         sidebar.classList.remove('open');
-        sidebar.classList.add('collapsed');
         if (overlay) {
             overlay.classList.remove('active');
         }
