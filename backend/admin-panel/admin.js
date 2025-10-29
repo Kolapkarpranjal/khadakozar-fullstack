@@ -156,6 +156,20 @@ function navigateToSection(section) {
     };
     pageTitle.textContent = titles[section] || section;
     
+    // Close sidebar on mobile after navigation
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    // Check if sidebar is open (on mobile)
+    if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        sidebar.classList.add('collapsed');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+    }
+    
     // Hide all content sections
     document.getElementById('dashboardContent').classList.add('hidden');
     document.getElementById('allSubmissionsContent').classList.add('hidden');
