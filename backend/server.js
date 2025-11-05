@@ -27,6 +27,8 @@ app.use(cors({
     ? [
         'https://khadakozar-fullstack-production.up.railway.app',
         'https://khadak-ozar-grampanchayat.netlify.app',
+        'https://grampanchayatkhadakozar.com',
+        'https://www.grampanchayatkhadakozar.com',
         'https://yourdomain.com'
       ] 
     : ['http://localhost:3000', 'http://localhost:5000'],

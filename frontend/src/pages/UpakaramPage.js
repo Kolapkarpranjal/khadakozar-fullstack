@@ -96,8 +96,8 @@ export default function UpakaramPage() {
       } catch (e) {
         // If API fails, show static ones so page still renders
         if (isMounted) {
-          setEvents(staticEvents);
-          setLoading(false);
+      setEvents(staticEvents);
+      setLoading(false);
         }
       }
     })();

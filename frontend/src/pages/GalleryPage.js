@@ -18,7 +18,7 @@ export default function GalleryPage() {
             const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
             const alt = language === 'mr' ? (item.altTextMr || item.altText || title || 'Gallery image') : (item.altTextEn || item.altText || title || 'Gallery image');
             return {
-              src: `${API_URL.BASE}${item.imageUrl}`,
+            src: `${API_URL.BASE}${item.imageUrl}`,
               alt,
               title,
               description: desc

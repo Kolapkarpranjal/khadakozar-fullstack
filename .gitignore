@@ -4,7 +4,13 @@ package-lock.json
 
 # Environment variables
 .env
+.env.production
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 config.env
+backend/config.env
 
 # Build files
 frontend/build/

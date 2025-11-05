@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
+import { API_URL } from '../utils/config';
 
 export default function TakrarSuchanaForm() {
   const { t, language } = useLanguage();
@@ -99,7 +100,7 @@ export default function TakrarSuchanaForm() {
       }
       
       // Submit to backend API
-      const response = await fetch('https://khadakozar-fullstack-production.up.railway.app/api/forms/submit', {
+      const response = await fetch(API_URL.FORMS, {
         method: 'POST',
         body: submitData
       });

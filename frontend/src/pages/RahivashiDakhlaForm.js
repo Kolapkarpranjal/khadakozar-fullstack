@@ -1,5 +1,6 @@
 import { useLanguage } from "../hooks/useLanguage";
 import { useState } from "react";
+import { API_URL } from "../utils/config";
 
 export default function RahivashiDakhlaForm() {
   const { t, language } = useLanguage();
@@ -54,7 +55,7 @@ export default function RahivashiDakhlaForm() {
       }
 
       // Submit to backend
-      const response = await fetch('https://khadakozar-fullstack-production.up.railway.app/api/forms/submit', {
+      const response = await fetch(API_URL.FORMS, {
         method: 'POST',
         body: submitData
       });
