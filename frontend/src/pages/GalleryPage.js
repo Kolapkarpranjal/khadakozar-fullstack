@@ -1,7 +1,38 @@
 import { useLanguage } from "../hooks/useLanguage";
+import { useEffect, useState } from "react";
+import { API_URL } from "../utils/config";
 
 export default function GalleryPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [dynamicImages, setDynamicImages] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL.BASE}/api/gallery`);
+        const data = await res.json();
+        if (isMounted && data && data.success) {
+          const mapped = (data.data || []).map(item => {
+            const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
+            const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
+            const alt = language === 'mr' ? (item.altTextMr || item.altText || title || 'Gallery image') : (item.altTextEn || item.altText || title || 'Gallery image');
+            return {
+              src: `${API_URL.BASE}${item.imageUrl}`,
+              alt,
+              title,
+              description: desc
+            };
+          });
+          setDynamicImages(mapped);
+        }
+      } catch (e) {
+        // Fail silently; static images will still show
+        console.warn('Failed to load dynamic gallery', e);
+      }
+    })();
+    return () => { isMounted = false; };
+  }, []);
 
   const galleryImages = [
     {
@@ -93,6 +124,8 @@ export default function GalleryPage() {
     }
   ];
 
+  const allImages = [...dynamicImages, ...galleryImages];
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 md:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,7 +134,7 @@ export default function GalleryPage() {
         </h1>
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {galleryImages.map((image, index) => (
+            {allImages.map((image, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 {image.video ? (
                   <video

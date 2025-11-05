@@ -371,6 +371,30 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
+        /* Primary button for forms (nice green) */
+        .primary-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            width: auto;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
+            transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+        }
+        .primary-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(16, 185, 129, 0.35);
+        }
+        .primary-btn:active {
+            transform: translateY(0);
+            opacity: 0.95;
+        }
         
         /* Responsive Styles - Enhanced for Mobile */
         @media (max-width: 768px) {
@@ -688,6 +712,15 @@
                         <span class="nav-item-icon">💬</span>
                         तक्रार सूचना
                     </a>
+                    <div class="nav-section-title" style="margin-top: 1rem;">गॅलेरी व उपक्रम</div>
+                    <a href="#" class="nav-item" data-section="gallery">
+                        <span class="nav-item-icon">🖼️</span>
+                        गॅलेरी व्यवस्थापन
+                    </a>
+                    <a href="#" class="nav-item" data-section="events">
+                        <span class="nav-item-icon">🎉</span>
+                        उपक्रम व्यवस्थापन
+                    </a>
                 </div>
             </nav>
             </div>
@@ -768,6 +801,38 @@
                         </table>
                     </div>
                 </div>
+            </div>
+
+            <!-- Gallery Management -->
+            <div id="galleryContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-4">गॅलेरी व्यवस्थापन</h2>
+                <form id="galleryForm" class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="galleryTitle" placeholder="शीर्षक" class="border p-2 rounded" required />
+                        <input type="text" id="galleryAlt" placeholder="Alt Text" class="border p-2 rounded" />
+                        <input type="text" id="galleryCategory" placeholder="वर्ग (पर्यायी)" class="border p-2 rounded" />
+                        <input type="file" id="galleryImage" accept="image/*" class="border p-2 rounded md:col-span-2" required />
+                        <button class="primary-btn">प्रतिमा जोडा</button>
+                    </div>
+                </form>
+                <div id="galleryList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Events Management -->
+            <div id="eventsContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-4">उपक्रम (Events) व्यवस्थापन</h2>
+                <form id="eventForm" class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="eventTitle" placeholder="शीर्षक" class="border p-2 rounded" required />
+                        <input type="text" id="eventStatus" placeholder="स्थिती (Upcoming/Ongoing/Completed)" class="border p-2 rounded" />
+                        <input type="text" id="eventDate" placeholder="तारीख" class="border p-2 rounded" />
+                        <input type="text" id="eventAlt" placeholder="Alt Text" class="border p-2 rounded" />
+                        <textarea id="eventDescription" placeholder="वर्णन" class="border p-2 rounded md:col-span-2"></textarea>
+                        <input type="file" id="eventImage" accept="image/*" class="border p-2 rounded" required />
+                        <button class="primary-btn">उपक्रम जोडा</button>
+                    </div>
+                </form>
+                <div id="eventsList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </div>
 
             <!-- All Submissions Content -->

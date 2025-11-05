@@ -43,7 +43,7 @@ export const getAllMembers = (lang = 'mr') => {
     },
     {
       _id: '6',
-      memberName: lang === 'mr' ? 'शिवाजी चिंधू घोडाडे' : 'Shivaji Chindhu Ghodhade',
+      memberName: lang === 'mr' ? 'शिवाजी चिंधू घोधडे' : 'Shivaji Chindhu Ghodhade',
       memberDesignation: lang === 'mr' ? 'सदस्य' : 'Member',
       imageUrl: '/images/members/shivajighodke.jpg',
       order: 6,
@@ -83,7 +83,7 @@ export const getAllMembers = (lang = 'mr') => {
     },
     {
       _id: '11',
-      memberName: lang === 'mr' ? 'लक्ष्मीबाई चहाडू सूर्यवंशी' : 'Laxmibai Chahadu Suryawanshi',
+      memberName: lang === 'mr' ? 'लक्ष्मीबाई चहादु सुर्यवंशी' : 'Laxmibai Chahadu Suryawanshi',
       memberDesignation: lang === 'mr' ? 'महिला सदस्य' : 'Member (Female)',
       imageUrl: '/images/members/laxmibai.jpg',
       order: 11,
@@ -91,7 +91,7 @@ export const getAllMembers = (lang = 'mr') => {
     },
     {
       _id: '12',
-      memberName: lang === 'mr' ? 'प्रियंका शिवनाथ केडारे' : 'Priyanka Shivanath Kedare',
+      memberName: lang === 'mr' ? 'प्रियांका शिवनाथ केदारे' : 'Priyanka Shivanath Kedare',
       memberDesignation: lang === 'mr' ? 'महिला सदस्य' : 'Member (Female)',
       imageUrl: '/images/members/priyanka.jpg',
       order: 12,
@@ -107,7 +107,7 @@ export const getAllMembers = (lang = 'mr') => {
     },
     {
       _id: '14',
-      memberName: lang === 'mr' ? 'सुशील राजेंद्र केडारे' : 'Sushil Rajendra Kedare',
+      memberName: lang === 'mr' ? 'सुशील राजेंद्र केदारे' : 'Sushil Rajendra Kedare',
       memberDesignation: lang === 'mr' ? 'संगणक ऑपरेटर' : 'Computer Operator',
       imageUrl: '/images/members/member2.jpg',
       order: 14,
@@ -115,9 +115,9 @@ export const getAllMembers = (lang = 'mr') => {
     },
     {
       _id: '15',
-      memberName: lang === 'mr' ? 'गणेश केदु पगार' : 'Ganesh Kedu Pagar',
-      memberDesignation: lang === 'mr' ? 'क्लर्क वसुली कारकून' : 'Clerk Vasuli Karkun',
-      imageUrl: '/images/members/member3.jpg',
+      memberName: lang === 'mr' ? 'गणेश केदू पगार' : 'Ganesh Kedu Pagar',
+      memberDesignation: lang === 'mr' ? 'लिपिक वसुली कारकून' : 'Clerk Vasuli Karkun',
+      imageUrl: '/images/members/गणेश केदू पगार.jpg',
       order: 15,
       isActive: true
     },
@@ -125,7 +125,7 @@ export const getAllMembers = (lang = 'mr') => {
       _id: '16',
       memberName: lang === 'mr' ? 'कैलास रामदास पगार' : 'Kailas Ramdas Pagar',
       memberDesignation: lang === 'mr' ? 'ग्राम रोजगार सहायक' : 'Gram Rojgar Sahayak',
-      imageUrl: '/images/members/member4.jpg',
+      imageUrl: '/images/members/कैलास रामदास पगार.jpg',
       order: 16,
       isActive: true
     },

@@ -10,12 +10,16 @@ require('dotenv').config({ path: './config.env' });
 const authRoutes = require('./routes/auth');
 const formRoutes = require('./routes/forms');
 const adminRoutes = require('./routes/admin');
+const galleryRoutes = require('./routes/gallery');
+const eventsRoutes = require('./routes/events');
 const { createDefaultAdmin } = require('./controllers/authController');
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
+// Security middleware (allow cross-origin resource loading for images from frontend dev server)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // CORS configuration
 app.use(cors({
@@ -38,11 +42,39 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Root endpoint (must be before static middleware)
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Khadak Ozar Grampanchayat API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      adminPanel: '/admin-panel/',
+      api: {
+        auth: '/api/auth',
+        forms: '/api/forms',
+        admin: '/api/admin',
+        gallery: '/api/gallery',
+        events: '/api/events'
+      }
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve admin panel static files
 app.use('/admin-panel', express.static(path.join(__dirname, 'admin-panel')));
+// Serve admin panel index.html for root admin-panel route
+app.get('/admin-panel', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin-panel', 'index.html'));
+});
+app.get('/admin-panel/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin-panel', 'index.html'));
+});
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/grampanchayat_khadak_ozar', {
@@ -60,6 +92,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/grampanch
 app.use('/api/auth', authRoutes);
 app.use('/api/forms', formRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/events', eventsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

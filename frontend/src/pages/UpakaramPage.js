@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function UpakaramPage() {
   const { language, t } = useLanguage();
@@ -68,13 +69,40 @@ export default function UpakaramPage() {
   ];
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setEvents(staticEvents);
-      setLoading(false);
-    }, 1000);
+    let isMounted = true;
 
-    return () => clearTimeout(timer);
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL.BASE}/api/events`);
+        const data = await res.json();
+        const dynamic = Array.isArray(data?.data) ? data.data.map(item => {
+          const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
+          const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
+          const alt = language === 'mr' ? (item.altTextMr || item.altText || title) : (item.altTextEn || item.altText || title);
+          return {
+            _id: item._id,
+            title,
+            description: desc,
+            imageUrl: `${API_URL.BASE}${item.imageUrl}`,
+            altText: alt,
+            status: item.status || 'Completed',
+            date: item.date || ''
+          };
+        }) : [];
+        if (isMounted) {
+          setEvents([...dynamic, ...staticEvents]);
+          setLoading(false);
+        }
+      } catch (e) {
+        // If API fails, show static ones so page still renders
+        if (isMounted) {
+          setEvents(staticEvents);
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => { isMounted = false; };
   }, [language]);
 
   const handleViewDetails = (event) => {

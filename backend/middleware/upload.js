@@ -2,8 +2,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
-const uploadDir = './uploads';
+// Ensure uploads directory exists (always resolve to backend/uploads)
+// Using __dirname keeps the path consistent regardless of where the node process is started
+const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -23,7 +24,10 @@ const formTypes = [
   'takrar-suchana'
 ];
 
-formTypes.forEach(formType => {
+// Ensure gallery and events directories also exist
+const extraDirs = ['gallery', 'events'];
+
+[...formTypes, ...extraDirs].forEach(formType => {
   const formDir = path.join(uploadDir, formType);
   if (!fs.existsSync(formDir)) {
     fs.mkdirSync(formDir, { recursive: true });
@@ -33,8 +37,20 @@ formTypes.forEach(formType => {
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const formType = req.body.formType || 'general';
-    const uploadPath = path.join(uploadDir, formType);
+    // Determine subdirectory using request URL first (robust even if body fields are missing)
+    const urlPath = `${req.baseUrl || ''}${req.path || ''}`;
+    let resolvedSubdir = 'general';
+    if (urlPath.includes('/gallery')) {
+      resolvedSubdir = 'gallery';
+    } else if (urlPath.includes('/events')) {
+      resolvedSubdir = 'events';
+    } else if (req.body.uploadTarget && ['gallery', 'events'].includes(req.body.uploadTarget)) {
+      resolvedSubdir = req.body.uploadTarget;
+    } else if (req.body.formType) {
+      resolvedSubdir = req.body.formType;
+    }
+
+    const uploadPath = path.join(uploadDir, resolvedSubdir);
     
     // Ensure directory exists
     if (!fs.existsSync(uploadPath)) {
@@ -119,6 +135,9 @@ module.exports = {
   upload,
   handleUploadError
 };
+
+
+
 
 
 

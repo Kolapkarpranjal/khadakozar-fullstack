@@ -1,5 +1,6 @@
 // Admin Panel JavaScript with Marathi Language Support
-const API_BASE_URL = 'https://khadakozar-fullstack-production.up.railway.app/api';
+// Use same-origin API base to work in local (http://localhost:5000) and production
+const API_BASE_URL = `${window.location.origin}/api`;
 
 let currentToken = localStorage.getItem('adminToken');
 let currentPage = 1;
@@ -34,6 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
         showAdminPanel();
         loadStats();
         loadRecentSubmissions();
+        // Bind management forms if present
+        bindManagementForms();
+        // Ensure management lists render immediately if their containers are on the page
+        if (document.getElementById('galleryList')) {
+            loadGallery();
+        }
+        if (document.getElementById('eventsList')) {
+            loadEvents();
+        }
     } else {
         showLoginPage();
     }
@@ -100,6 +110,144 @@ function setupEventListeners() {
     });
 }
 
+// Bind add forms for gallery/events
+function bindManagementForms() {
+    const galleryForm = document.getElementById('galleryForm');
+    if (galleryForm) {
+        galleryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData();
+            fd.append('title', document.getElementById('galleryTitle').value);
+            fd.append('altText', document.getElementById('galleryAlt').value);
+            fd.append('category', document.getElementById('galleryCategory').value);
+            const file = document.getElementById('galleryImage').files[0];
+            if (!file) return;
+            fd.append('image', file);
+            fd.append('uploadTarget', 'gallery');
+            await fetch(`${API_BASE_URL}/gallery`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${currentToken}` },
+                body: fd
+            });
+            await loadGallery();
+            galleryForm.reset();
+        });
+    }
+
+    const eventForm = document.getElementById('eventForm');
+    if (eventForm) {
+        eventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData();
+            fd.append('title', document.getElementById('eventTitle').value);
+            // Normalize status to API enum (Upcoming|Ongoing|Completed)
+            const rawStatus = (document.getElementById('eventStatus').value || '').toString().trim();
+            const normalizedMap = {
+                'upcoming': 'Upcoming',
+                'ongoing': 'Ongoing',
+                'running': 'Ongoing',
+                'completed': 'Completed',
+                // Marathi common inputs
+                'येणारे': 'Upcoming',
+                'चालू': 'Ongoing',
+                'पूर्ण': 'Completed'
+            };
+            const normalizedKey = rawStatus.toLowerCase();
+            const safeStatus = normalizedMap[normalizedKey] || '';
+            if (safeStatus) fd.append('status', safeStatus);
+            fd.append('date', document.getElementById('eventDate').value);
+            fd.append('altText', document.getElementById('eventAlt').value);
+            fd.append('description', document.getElementById('eventDescription').value);
+            const file = document.getElementById('eventImage').files[0];
+            if (!file) return;
+            fd.append('image', file);
+            fd.append('uploadTarget', 'events');
+            const resp = await fetch(`${API_BASE_URL}/events`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${currentToken}` },
+                body: fd
+            });
+            try {
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
+                    alert(data.message || 'उपक्रम जतन करण्यात अडचण आली. Status should be Upcoming/Ongoing/Completed.');
+                    return;
+                }
+            } catch (_) { /* ignore parse issues */ }
+            await loadEvents();
+            eventForm.reset();
+        });
+    }
+}
+
+async function loadGallery() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/gallery`);
+        const data = await res.json();
+        const list = document.getElementById('galleryList');
+        if (!list) return;
+        list.innerHTML = '';
+        (data.data || []).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow p-3 overflow-hidden';
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" alt="${item.altText || ''}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" />
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                    <div class="font-semibold text-gray-800 truncate text-sm" title="${item.title}">${item.title}</div>
+                    <button data-del-gallery="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        // Bind delete buttons
+        list.querySelectorAll('[data-del-gallery]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-del-gallery');
+                await fetch(`${API_BASE_URL}/gallery/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                loadGallery();
+            });
+        });
+    } catch (e) {
+        console.error('Load gallery failed', e);
+    }
+}
+
+async function loadEvents() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/events`);
+        const data = await res.json();
+        const list = document.getElementById('eventsList');
+        if (!list) return;
+        list.innerHTML = '';
+        (data.data || []).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow p-3 overflow-hidden';
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" alt="${item.altText || ''}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" />
+                </div>
+                <div class="mt-2 font-semibold text-gray-800 text-sm">${item.title}</div>
+                <div class="text-sm text-gray-600">${item.status || ''} • ${item.date || ''}</div>
+                <div class="mt-2 flex justify-end">
+                    <button data-del-event="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        list.querySelectorAll('[data-del-event]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-del-event');
+                await fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                loadEvents();
+            });
+        });
+    } catch (e) {
+        console.error('Load events failed', e);
+    }
+}
+
 // Show login page
 function showLoginPage() {
     document.getElementById('loginPage').classList.remove('hidden');
@@ -152,7 +300,9 @@ function navigateToSection(section) {
         'vyavasay-naharakat-dakhla': 'व्यवसाय ना हरकत दाखला',
         'daridrya-resha-dakhla': 'दारिद्र्य रेषा दाखला',
         'rahivashi-dakhla': 'रहिवाशी दाखला',
-        'takrar-suchana': 'तक्रार सूचना'
+        'takrar-suchana': 'तक्रार सूचना',
+        'gallery': 'गॅलेरी व्यवस्थापन',
+        'events': 'उपक्रम व्यवस्थापन'
     };
     pageTitle.textContent = titles[section] || section;
     
@@ -175,6 +325,10 @@ function navigateToSection(section) {
     document.getElementById('dashboardContent').classList.add('hidden');
     document.getElementById('allSubmissionsContent').classList.add('hidden');
     document.getElementById('formSectionContent').classList.add('hidden');
+    const galleryContent = document.getElementById('galleryContent');
+    const eventsContent = document.getElementById('eventsContent');
+    if (galleryContent) galleryContent.classList.add('hidden');
+    if (eventsContent) eventsContent.classList.add('hidden');
     
     currentSection = section;
     
@@ -185,6 +339,12 @@ function navigateToSection(section) {
     } else if (section === 'all-submissions') {
         document.getElementById('allSubmissionsContent').classList.remove('hidden');
         loadSubmissions();
+    } else if (section === 'gallery') {
+        document.getElementById('galleryContent').classList.remove('hidden');
+        loadGallery();
+    } else if (section === 'events') {
+        document.getElementById('eventsContent').classList.remove('hidden');
+        loadEvents();
     } else {
         // Form section
         document.getElementById('formSectionContent').classList.remove('hidden');
