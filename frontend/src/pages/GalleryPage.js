@@ -10,8 +10,21 @@ export default function GalleryPage() {
     let isMounted = true;
     (async () => {
       try {
-        const res = await fetch(`${API_URL.BASE}/api/gallery`);
+        const apiUrl = `${API_URL.BASE}/api/gallery`;
+        console.log('Fetching gallery from:', apiUrl);
+        const res = await fetch(apiUrl);
+        
+        if (!res.ok) {
+          console.error('Gallery API response not OK:', res.status, res.statusText);
+          if (isMounted) {
+            setDynamicImages([]);
+          }
+          return;
+        }
+        
         const data = await res.json();
+        console.log('Gallery API response:', data);
+        
         if (isMounted && data && data.success) {
           const mapped = (data.data || []).map(item => {
             const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
@@ -20,15 +33,7 @@ export default function GalleryPage() {
             const src = `${API_URL.BASE}${item.imageUrl}`;
             const isVideo = item.isVideo || false;
             
-            // Log video items for debugging
-            if (isVideo) {
-              console.log('Video item:', {
-                title,
-                src,
-                imageUrl: item.imageUrl,
-                isVideo: item.isVideo
-              });
-            }
+            console.log('Gallery item:', { title, src, imageUrl: item.imageUrl, isVideo });
             
             return {
               _id: item._id,
@@ -39,11 +44,19 @@ export default function GalleryPage() {
               video: isVideo
             };
           });
+          console.log('Mapped gallery items:', mapped.length);
           setDynamicImages(mapped);
+        } else {
+          console.warn('Gallery API returned no data or unsuccessful:', data);
+          if (isMounted) {
+            setDynamicImages([]);
+          }
         }
       } catch (e) {
-        // Fail silently
-        console.warn('Failed to load gallery from API', e);
+        console.error('Failed to load gallery from API:', e);
+        if (isMounted) {
+          setDynamicImages([]);
+        }
       }
     })();
     return () => { isMounted = false; };

@@ -3,19 +3,24 @@
 const getApiBaseUrl = () => {
   // If environment variable is set, use it
   if (process.env.REACT_APP_API_URL) {
+    console.log('Using REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
     return process.env.REACT_APP_API_URL;
   }
   
   // Check if we're running on localhost (development)
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    console.log('Using localhost API URL');
     return 'http://localhost:5000';
   }
   
   // Default to Railway backend for production
-  return 'https://khadakozar-fullstack-production.up.railway.app';
+  const railwayUrl = 'https://khadakozar-fullstack-production.up.railway.app';
+  console.log('Using Railway API URL:', railwayUrl);
+  return railwayUrl;
 };
 
 const API_BASE_URL = getApiBaseUrl();
+console.log('API_BASE_URL configured as:', API_BASE_URL);
 
 export const API_URL = {
   BASE: API_BASE_URL,
