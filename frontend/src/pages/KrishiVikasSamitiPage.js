@@ -9,7 +9,7 @@ export default function KrishiVikasSamitiPage() {
   // Fetch committee members from API
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchMembers = async () => {
       try {
         const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/krishivikassamiti`);
@@ -86,23 +86,23 @@ export default function KrishiVikasSamitiPage() {
                     ) : (
                       committeeMembers.map((member, index) => (
                         <tr key={member._id || member.srNo || index} className="hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 transition-all duration-200">
-                          <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium text-center">
+                        <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium text-center">
                             {member.srNo || index + 1}
-                          </td>
-                          <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium">
-                            {member.name}
-                          </td>
-                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
-                            <span className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                              {member.position}
-                            </span>
-                          </td>
-                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
-                            <span className="bg-gradient-to-r from-blue-100 to-green-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                              {member.designation}
-                            </span>
-                          </td>
-                        </tr>
+                        </td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium">
+                          {member.name}
+                        </td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                          <span className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                            {member.position}
+                          </span>
+                        </td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                          <span className="bg-gradient-to-r from-blue-100 to-green-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                            {member.designation}
+                          </span>
+                        </td>
+                      </tr>
                       ))
                     )}
                   </tbody>

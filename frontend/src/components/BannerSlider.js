@@ -43,9 +43,9 @@ export default function BannerSlider() {
         // Fail silently and use static banners as fallback
         console.warn('Failed to load banners from API, using static banners', e);
         if (isMounted) {
-          const staticBanners = getActiveBanners(language);
-          setBannerImages(staticBanners);
-          setLoading(false);
+    const staticBanners = getActiveBanners(language);
+    setBannerImages(staticBanners);
+    setLoading(false);
         }
       }
     })();

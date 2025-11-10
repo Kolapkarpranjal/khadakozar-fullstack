@@ -33,7 +33,7 @@ export default function Navigation() {
   // Fetch committees from API
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchCommittees = async () => {
       try {
         const response = await fetch(API_URL.COMMITTEES);
@@ -44,9 +44,9 @@ export default function Navigation() {
             const dynamicCommittees = result.data
               .filter(committee => committee.isActive !== false) // Only show active committees
               .map(committee => ({
-                path: committee.route || `/samiti/${committee.path}`,
+              path: committee.route || `/samiti/${committee.path}`,
                 label: language === 'mr' ? (committee.titleMarathi || committee.title) : (committee.title || committee.titleMarathi)
-              }));
+            }));
             
             // Use only dynamic committees from API
             setSamitiSubItems(dynamicCommittees);

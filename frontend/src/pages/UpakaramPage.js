@@ -18,18 +18,18 @@ export default function UpakaramPage() {
         const data = await res.json();
         if (isMounted && data && data.success) {
           const mapped = (data.data || []).map(item => {
-            const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
-            const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
-            const alt = language === 'mr' ? (item.altTextMr || item.altText || title) : (item.altTextEn || item.altText || title);
-            return {
-              _id: item._id,
-              title,
-              description: desc,
-              imageUrl: `${API_URL.BASE}${item.imageUrl}`,
-              altText: alt,
-              status: item.status || 'Completed',
-              date: item.date || ''
-            };
+          const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
+          const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
+          const alt = language === 'mr' ? (item.altTextMr || item.altText || title) : (item.altTextEn || item.altText || title);
+          return {
+            _id: item._id,
+            title,
+            description: desc,
+            imageUrl: `${API_URL.BASE}${item.imageUrl}`,
+            altText: alt,
+            status: item.status || 'Completed',
+            date: item.date || ''
+          };
           });
           setEvents(mapped);
           setLoading(false);
@@ -39,7 +39,7 @@ export default function UpakaramPage() {
         console.warn('Failed to load events from API', e);
         if (isMounted) {
           setEvents([]);
-          setLoading(false);
+      setLoading(false);
         }
       }
     })();

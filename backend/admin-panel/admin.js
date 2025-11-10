@@ -519,9 +519,9 @@ function bindManagementForms() {
             if (editId) {
                 // Update mode - image is optional
                 if (file) {
-                    fd.append('image', file);
+            fd.append('image', file);
                 }
-                fd.append('uploadTarget', 'events');
+            fd.append('uploadTarget', 'events');
                 try {
                     const resp = await fetch(`${API_BASE_URL}/events/${editId}`, {
                         method: 'PUT',
@@ -555,19 +555,19 @@ function bindManagementForms() {
                 fd.append('image', file);
                 fd.append('uploadTarget', 'events');
                 try {
-                    const resp = await fetch(`${API_BASE_URL}/events`, {
-                        method: 'POST',
-                        headers: { Authorization: `Bearer ${currentToken}` },
-                        body: fd
-                    });
-                    const data = await resp.json();
-                    if (!resp.ok || !data.success) {
+            const resp = await fetch(`${API_BASE_URL}/events`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${currentToken}` },
+                body: fd
+            });
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
                         alert(data.message || 'उपक्रम जतन करण्यात अडचण आली');
-                        return;
-                    }
+                    return;
+                }
                     alert('उपक्रम यशस्वीरित्या जोडला गेला!');
-                    await loadEvents();
-                    eventForm.reset();
+            await loadEvents();
+            eventForm.reset();
                 } catch (error) {
                     console.error('Error adding event:', error);
                     alert('उपक्रम जोडताना त्रुटी आली');
@@ -983,9 +983,9 @@ async function loadEvents() {
                 e.preventDefault();
                 e.stopPropagation();
                 if (confirm('आपण खात्री आहे की आपण हा उपक्रम हटवू इच्छिता?')) {
-                    const id = btn.getAttribute('data-del-event');
-                    await fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
-                    loadEvents();
+                const id = btn.getAttribute('data-del-event');
+                await fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                loadEvents();
                 }
             });
         });
