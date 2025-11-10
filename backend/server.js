@@ -12,6 +12,10 @@ const formRoutes = require('./routes/forms');
 const adminRoutes = require('./routes/admin');
 const galleryRoutes = require('./routes/gallery');
 const eventsRoutes = require('./routes/events');
+const bannersRoutes = require('./routes/banners');
+const membersRoutes = require('./routes/members');
+const committeesRoutes = require('./routes/committees');
+const committeeMembersRoutes = require('./routes/committeeMembers');
 const { createDefaultAdmin } = require('./controllers/authController');
 
 const app = express();
@@ -35,9 +39,9 @@ app.use(cors({
   credentials: true
 }));
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware - increased limit for file uploads
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -58,7 +62,11 @@ app.get('/', (req, res) => {
         forms: '/api/forms',
         admin: '/api/admin',
         gallery: '/api/gallery',
-        events: '/api/events'
+        events: '/api/events',
+        banners: '/api/banners',
+        members: '/api/members',
+        committees: '/api/committees',
+        committeeMembers: '/api/committee-members'
       }
     },
     timestamp: new Date().toISOString()
@@ -96,6 +104,10 @@ app.use('/api/forms', formRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/events', eventsRoutes);
+app.use('/api/banners', bannersRoutes);
+app.use('/api/members', membersRoutes);
+app.use('/api/committees', committeesRoutes);
+app.use('/api/committee-members', committeeMembersRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -118,9 +130,14 @@ app.use((err, req, res, next) => {
 
 // 404 handler
 app.use('*', (req, res) => {
+  console.log('404 - Route not found:', req.method, req.originalUrl);
+  console.log('Request path:', req.path);
+  console.log('All registered routes:', app._router?.stack?.map(r => r.route?.path || r.regexp).filter(Boolean));
   res.status(404).json({ 
     success: false, 
-    message: 'Route not found' 
+    message: 'Route not found',
+    path: req.originalUrl,
+    method: req.method
   });
 });
 

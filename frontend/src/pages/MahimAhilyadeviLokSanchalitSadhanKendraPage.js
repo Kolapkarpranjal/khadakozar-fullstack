@@ -1,10 +1,15 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function MahimAhilyadeviLokSanchalitSadhanKendraPage() {
   const { t, language } = useLanguage();
+  const [bachatGatData, setBachatGatData] = useState([]);
 
-  // Bachat Gat (Savings Group) data
-  const bachatGatData = [
+  // Fetch committee members from API
+  useEffect(() => {
+    // Static Bachat Gat (Savings Group) data (fallback)
+    const staticBachatGatData = [
     {
       srNo: 1,
       groupName: "त्रीरश्मी गट",
@@ -138,6 +143,42 @@ export default function MahimAhilyadeviLokSanchalitSadhanKendraPage() {
       remarks: ""
     }
   ];
+
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/mahimalyadeviloksanchalitsadhankendra`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const dynamicData = result.data.map(member => ({
+              srNo: member.srNo,
+              groupName: language === 'mr' ? member.groupNameMarathi : member.groupName,
+              groupNameEn: member.groupName,
+              presidentName: language === 'mr' ? member.presidentNameMarathi : member.presidentName,
+              presidentNameEn: member.presidentName,
+              secretary: language === 'mr' ? member.secretaryMarathi : member.secretary,
+              secretaryEn: member.secretary,
+              memberCount: member.memberCount || 11,
+              remarks: member.remarks || ''
+            }));
+            
+            // Use API data (they now include the static data from database)
+            setBachatGatData(dynamicData);
+            return;
+          }
+        }
+        // Fallback to static data
+        setBachatGatData(staticBachatGatData);
+      } catch (error) {
+        console.warn('Failed to fetch committee members from API, using static data:', error);
+        // Fallback to static data
+        setBachatGatData(staticBachatGatData);
+      }
+    };
+
+    fetchMembers();
+  }, [language]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 pt-16 md:pt-20">

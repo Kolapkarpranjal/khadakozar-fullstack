@@ -1,116 +1,51 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function KrishiVikasSamitiPage() {
   const { t, language } = useLanguage();
+  const [committeeMembers, setCommitteeMembers] = useState([]);
 
-  // Committee members data for 2025-26
-  const committeeMembers = [
-    {
-      srNo: 1,
-      name: language === 'mr' ? "श्री. सागर वसंतराव पगार" : "Shri. Sagar Vasantrao Pagar",
-      position: language === 'mr' ? "सरपंच" : "Sarpanch",
-      designation: language === 'mr' ? "अध्यक्ष" : "Chairman",
-      mobile: ""
-    },
-    {
-      srNo: 2,
-      name: language === 'mr' ? "श्री. हर्षद जनार्दन पगार" : "Shri. Harshad Janardan Pagar",
-      position: language === 'mr' ? "उपसरपंच" : "Up-Sarpanch",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 3,
-      name: language === 'mr' ? "सौ. प्रियांका शिवनाथ केदारे" : "Smt. Priyanka Shivnath Kedare",
-      position: language === 'mr' ? "ग्रा. पं. सदस्य" : "Gram Panchayat Member",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 4,
-      name: language === 'mr' ? "सौ. लाक्षिमिबाई चहादू सूर्यवंशी" : "Smt. Lakshmibai Chahadu Suryavanshi",
-      position: language === 'mr' ? "ग्रा. पं. सदस्य" : "Gram Panchayat Member",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 5,
-      name: language === 'mr' ? "श्री. देविदास तात्याबा पगार" : "Shri. Devidas Tatya Pagar",
-      position: language === 'mr' ? "ग्रा. पं. सदस्य" : "Gram Panchayat Member",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 6,
-      name: language === 'mr' ? "श्री. गोविंद तुळशीराम पगार" : "Shri. Govind Tulshiram Pagar",
-      position: language === 'mr' ? "ग्रा. पं. सदस्य" : "Gram Panchayat Member",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 7,
-      name: language === 'mr' ? "सौ. रत्ना आत्माराम पगार" : "Smt. Ratna Atmaram Pagar",
-      position: language === 'mr' ? "ग्रा. पं. सदस्य" : "Gram Panchayat Member",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 8,
-      name: language === 'mr' ? "श्री. बाजीराव खंडेराव पगार" : "Shri. Bajirao Khanderao Pagar",
-      position: language === 'mr' ? "विविध सह.संस्था अध्यक्ष" : "Various Co-operative Society President",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 9,
-      name: language === 'mr' ? "सौ. सारिका अशोक पगार" : "Smt. Sarika Ashok Pagar",
-      position: language === 'mr' ? "शेतकरी उत्पादक गट प्रतिनिधी" : "Farmer Producer Group Representative",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 10,
-      name: language === 'mr' ? "सौ. कविता किशोर पगार" : "Smt. Kavita Kishor Pagar",
-      position: language === 'mr' ? "महिला बचत गट प्रतिनिधी" : "Women's Savings Group Representative",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 11,
-      name: language === 'mr' ? "श्री. भाऊलाल तात्याबा पगार" : "Shri. Bhaulal Tatya Pagar",
-      position: language === 'mr' ? "कृषी पूरक व्यवसाय शेतकरी" : "Agricultural Supplementary Business Farmer",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 12,
-      name: language === 'mr' ? "सौ. कावेरी योगेश पगार" : "Smt. Kaveri Yogesh Pagar",
-      position: language === 'mr' ? "कृषी पूरक व्यवसाय शेतकरी" : "Agricultural Supplementary Business Farmer",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 13,
-      name: language === 'mr' ? "श्री. नितीन गंगाधर एखंडे" : "Shri. Nitin Gangadhar Ekhande",
-      position: language === 'mr' ? "ग्राम महसूल अधिकारी" : "Village Revenue Officer",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 14,
-      name: language === 'mr' ? "सौ. वि.जाधव" : "Smt. V. Jadhav",
-      position: language === 'mr' ? "कृषी सहायक अधिकारी" : "Agriculture Assistant Officer",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    },
-    {
-      srNo: 15,
-      name: language === 'mr' ? "श्री. रोशन बळवंत सूर्यवंशी" : "Shri. Roshan Balwant Suryavanshi",
-      position: language === 'mr' ? "ग्रामपंचायत अधिकारी" : "Gram Panchayat Officer",
-      designation: language === 'mr' ? "सदस्य" : "Member",
-      mobile: ""
-    }
-  ];
+  // Fetch committee members from API
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/krishivikassamiti`);
+        if (isMounted && response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const dynamicMembers = result.data.map(member => ({
+              srNo: member.srNo,
+              name: language === 'mr' ? (member.nameMarathi || member.name) : (member.name || member.nameMarathi),
+              position: language === 'mr' ? (member.positionMarathi || member.position) : (member.position || member.positionMarathi),
+              designation: language === 'mr' ? (member.designationMarathi || member.designation) : (member.designation || member.designationMarathi),
+              mobile: member.mobile || member.contact || ''
+            }));
+            
+            // Use only dynamic members from API
+            setCommitteeMembers(dynamicMembers);
+            return;
+          }
+        }
+        // If API fails or returns no data, show empty array
+        if (isMounted) {
+          setCommitteeMembers([]);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch committee members from API:', error);
+        // Fail silently - show empty array instead of static data
+        if (isMounted) {
+          setCommitteeMembers([]);
+        }
+      }
+    };
+
+    fetchMembers();
+    return () => { isMounted = false; };
+  }, [language]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 pt-20">
@@ -142,26 +77,34 @@ export default function KrishiVikasSamitiPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {committeeMembers.map((member) => (
-                      <tr key={member.srNo} className="hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 transition-all duration-200">
-                        <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium text-center">
-                          {member.srNo}
-                        </td>
-                        <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium">
-                          {member.name}
-                        </td>
-                        <td className="border border-gray-200 px-4 py-3 text-gray-700">
-                          <span className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                            {member.position}
-                          </span>
-                        </td>
-                        <td className="border border-gray-200 px-4 py-3 text-gray-700">
-                          <span className="bg-gradient-to-r from-blue-100 to-green-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                            {member.designation}
-                          </span>
+                    {committeeMembers.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="border border-gray-200 px-4 py-8 text-center text-gray-500">
+                          {language === 'mr' ? 'कोणतेही सदस्य उपलब्ध नाहीत' : 'No members available'}
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      committeeMembers.map((member, index) => (
+                        <tr key={member._id || member.srNo || index} className="hover:bg-gradient-to-r hover:from-green-50 hover:to-yellow-50 transition-all duration-200">
+                          <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium text-center">
+                            {member.srNo || index + 1}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-800 font-medium">
+                            {member.name}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            <span className="bg-gradient-to-r from-green-100 to-yellow-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                              {member.position}
+                            </span>
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            <span className="bg-gradient-to-r from-blue-100 to-green-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                              {member.designation}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

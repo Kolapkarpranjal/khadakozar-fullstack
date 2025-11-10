@@ -20,7 +20,11 @@ const formTypes = [
   'vyavasay-naharakat-dakhla',
   'daridrya-resha-dakhla',
   'rahivashi-dakhla',
-  'takrar-suchana'
+  'takrar-suchana',
+  'members',
+  'gallery',
+  'events',
+  'banners'
 ];
 
 formTypes.forEach(formType => {
@@ -33,8 +37,21 @@ formTypes.forEach(formType => {
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const formType = req.body.formType || 'general';
-    const uploadPath = path.join(uploadDir, formType);
+    // Check if this is a member upload (from members route)
+    let uploadType = req.body.formType || 'general';
+    
+    // Check route path to determine upload type
+    if (req.originalUrl && req.originalUrl.includes('/api/members')) {
+      uploadType = 'members';
+    } else if (req.originalUrl && req.originalUrl.includes('/api/gallery')) {
+      uploadType = 'gallery';
+    } else if (req.originalUrl && req.originalUrl.includes('/api/events')) {
+      uploadType = 'events';
+    } else if (req.originalUrl && req.originalUrl.includes('/api/banners')) {
+      uploadType = 'banners';
+    }
+    
+    const uploadPath = path.join(uploadDir, uploadType);
     
     // Ensure directory exists
     if (!fs.existsSync(uploadPath)) {
@@ -54,6 +71,12 @@ const storage = multer.diskStorage({
 
 // File filter
 const fileFilter = (req, file, cb) => {
+  // Check if this is a gallery or events upload (allow videos)
+  const isGalleryOrEvents = req.originalUrl && (
+    req.originalUrl.includes('/api/gallery') || 
+    req.originalUrl.includes('/api/events')
+  );
+  
   // Allowed file types
   const allowedTypes = [
     'image/jpeg',
@@ -64,6 +87,17 @@ const fileFilter = (req, file, cb) => {
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ];
+  
+  // Add video types for gallery and events
+  if (isGalleryOrEvents) {
+    allowedTypes.push(
+      'video/mp4',
+      'video/mpeg',
+      'video/quicktime',
+      'video/x-msvideo',
+      'video/webm'
+    );
+  }
 
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
@@ -72,12 +106,29 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Configure multer with different limits for videos
+const getFileSizeLimit = (req) => {
+  // Check if this is a gallery or events upload (allow larger files for videos)
+  const isGalleryOrEvents = req.originalUrl && (
+    req.originalUrl.includes('/api/gallery') || 
+    req.originalUrl.includes('/api/events')
+  );
+  
+  // For gallery/events, allow larger files (videos can be big)
+  if (isGalleryOrEvents) {
+    return parseInt(process.env.MAX_VIDEO_SIZE) || 200 * 1024 * 1024; // 200MB for videos
+  }
+  
+  // For other uploads (images, documents), use smaller limit
+  return parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024; // 10MB for images/documents
+};
+
 // Configure multer
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024, // 10MB default
+    fileSize: 200 * 1024 * 1024, // 200MB default (will be overridden by dynamic limit)
     files: 10 // Maximum 10 files per request
   }
 });
@@ -86,9 +137,19 @@ const upload = multer({
 const handleUploadError = (error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
+      // Determine the actual limit based on route
+      const isGalleryOrEvents = req.originalUrl && (
+        req.originalUrl.includes('/api/gallery') || 
+        req.originalUrl.includes('/api/events')
+      );
+      
+      const maxSize = isGalleryOrEvents 
+        ? (parseInt(process.env.MAX_VIDEO_SIZE) || 200 * 1024 * 1024) / (1024 * 1024)
+        : (parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024) / (1024 * 1024);
+      
       return res.status(400).json({
         success: false,
-        message: 'File too large. Maximum size is 10MB.'
+        message: `File too large. Maximum size is ${maxSize}MB.`
       });
     }
     if (error.code === 'LIMIT_FILE_COUNT') {

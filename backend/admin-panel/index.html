@@ -713,6 +713,10 @@
                         तक्रार सूचना
                     </a>
                     <div class="nav-section-title" style="margin-top: 1rem;">गॅलेरी व उपक्रम</div>
+                    <a href="#" class="nav-item" data-section="banners">
+                        <span class="nav-item-icon">🖼️</span>
+                        बॅनर व्यवस्थापन
+                    </a>
                     <a href="#" class="nav-item" data-section="gallery">
                         <span class="nav-item-icon">🖼️</span>
                         गॅलेरी व्यवस्थापन
@@ -720,6 +724,20 @@
                     <a href="#" class="nav-item" data-section="events">
                         <span class="nav-item-icon">🎉</span>
                         उपक्रम व्यवस्थापन
+                    </a>
+                    <div class="nav-section-title" style="margin-top: 1rem;">समिती सदस्य</div>
+                    <a href="#" class="nav-item" data-section="members">
+                        <span class="nav-item-icon">👥</span>
+                        मुख्य सदस्य व्यवस्थापन
+                    </a>
+                    <div class="nav-section-title" style="margin-top: 1rem;">समिती</div>
+                    <a href="#" class="nav-item" data-section="committees">
+                        <span class="nav-item-icon">📋</span>
+                        समिती व्यवस्थापन
+                    </a>
+                    <a href="#" class="nav-item" data-section="committeeMembers">
+                        <span class="nav-item-icon">👥</span>
+                        समितीचे सदस्य व्यवस्थापन
                     </a>
                 </div>
             </nav>
@@ -803,16 +821,51 @@
                 </div>
             </div>
 
+            <!-- Banners Management -->
+            <div id="bannersContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-2">बॅनर व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण होमपेजवरील बॅनर (स्लाइड प्रतिमा) जोडू शकता, संपादित करू शकता किंवा हटवू शकता. (Here you can add, edit, or delete banners (slide images) for the homepage.)</p>
+                <form id="bannerForm" class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="bannerTitle" placeholder="शीर्षक (Main Title)" class="border p-2 rounded" required />
+                        <input type="text" id="bannerTitleEn" placeholder="Title (English)" class="border p-2 rounded" />
+                        <input type="text" id="bannerTitleMr" placeholder="शीर्षक (मराठी)" class="border p-2 rounded" />
+                        <input type="text" id="bannerAlt" placeholder="Alt Text (Main)" class="border p-2 rounded" />
+                        <input type="text" id="bannerAltEn" placeholder="Alt Text (English)" class="border p-2 rounded" />
+                        <input type="text" id="bannerAltMr" placeholder="Alt Text (मराठी)" class="border p-2 rounded" />
+                        <input type="number" id="bannerOrder" placeholder="क्रमांक (Order)" class="border p-2 rounded" value="0" />
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">सक्रिय आहे का?</label>
+                            <select id="bannerIsActive" class="w-full border p-2 rounded">
+                                <option value="true">होय (Active)</option>
+                                <option value="false">नाही (Inactive)</option>
+                            </select>
+                        </div>
+                        <input type="file" id="bannerImage" accept="image/*" class="border p-2 rounded md:col-span-2" required />
+                        <button class="primary-btn">बॅनर जोडा</button>
+                    </div>
+                </form>
+                <div id="bannersList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+
             <!-- Gallery Management -->
             <div id="galleryContent" class="p-6 hidden">
-                <h2 class="text-xl font-bold mb-4">गॅलेरी व्यवस्थापन</h2>
+                <h2 class="text-xl font-bold mb-2">गॅलेरी व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण गॅलेरीमध्ये नवीन प्रतिमा जोडू शकता, संपादित करू शकता किंवा हटवू शकता. (Here you can add new images to the gallery, edit them, or delete them.)</p>
                 <form id="galleryForm" class="mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <input type="text" id="galleryTitle" placeholder="शीर्षक" class="border p-2 rounded" required />
                         <input type="text" id="galleryAlt" placeholder="Alt Text" class="border p-2 rounded" />
                         <input type="text" id="galleryCategory" placeholder="वर्ग (पर्यायी)" class="border p-2 rounded" />
-                        <input type="file" id="galleryImage" accept="image/*" class="border p-2 rounded md:col-span-2" required />
-                        <button class="primary-btn">प्रतिमा जोडा</button>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">व्हिडिओ आहे का?</label>
+                            <select id="galleryIsVideo" class="w-full border p-2 rounded mb-2">
+                                <option value="false">नाही (प्रतिमा)</option>
+                                <option value="true">होय (व्हिडिओ)</option>
+                            </select>
+                        </div>
+                        <input type="file" id="galleryImage" accept="image/*,video/*" class="border p-2 rounded md:col-span-2" required />
+                        <button class="primary-btn">प्रतिमा/व्हिडिओ जोडा</button>
                     </div>
                 </form>
                 <div id="galleryList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
@@ -820,19 +873,566 @@
 
             <!-- Events Management -->
             <div id="eventsContent" class="p-6 hidden">
-                <h2 class="text-xl font-bold mb-4">उपक्रम (Events) व्यवस्थापन</h2>
+                <h2 class="text-xl font-bold mb-2">उपक्रम (Events) व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण नवीन उपक्रम जोडू शकता, उपक्रमांची माहिती संपादित करू शकता किंवा हटवू शकता. (Here you can add new events, edit event information, or delete them.)</p>
                 <form id="eventForm" class="mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="eventTitle" placeholder="शीर्षक" class="border p-2 rounded" required />
-                        <input type="text" id="eventStatus" placeholder="स्थिती (Upcoming/Ongoing/Completed)" class="border p-2 rounded" />
+                        <input type="text" id="eventTitle" placeholder="शीर्षक (Main Title)" class="border p-2 rounded" required />
+                        <input type="text" id="eventTitleEn" placeholder="Title (English)" class="border p-2 rounded" />
+                        <input type="text" id="eventTitleMr" placeholder="शीर्षक (मराठी)" class="border p-2 rounded" />
+                        <textarea id="eventDescription" placeholder="वर्णन (Description)" class="border p-2 rounded md:col-span-2"></textarea>
+                        <textarea id="eventDescriptionEn" placeholder="Description (English)" class="border p-2 rounded md:col-span-2"></textarea>
+                        <textarea id="eventDescriptionMr" placeholder="वर्णन (मराठी)" class="border p-2 rounded md:col-span-2"></textarea>
+                        <input type="text" id="eventAlt" placeholder="Alt Text (Main)" class="border p-2 rounded" />
+                        <input type="text" id="eventAltEn" placeholder="Alt Text (English)" class="border p-2 rounded" />
+                        <input type="text" id="eventAltMr" placeholder="Alt Text (मराठी)" class="border p-2 rounded" />
+                        <select id="eventStatus" class="border p-2 rounded">
+                            <option value="Completed">Completed</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Upcoming">Upcoming</option>
+                        </select>
                         <input type="text" id="eventDate" placeholder="तारीख" class="border p-2 rounded" />
-                        <input type="text" id="eventAlt" placeholder="Alt Text" class="border p-2 rounded" />
-                        <textarea id="eventDescription" placeholder="वर्णन" class="border p-2 rounded md:col-span-2"></textarea>
-                        <input type="file" id="eventImage" accept="image/*" class="border p-2 rounded" required />
+                        <input type="file" id="eventImage" accept="image/*" class="border p-2 rounded md:col-span-2" required />
                         <button class="primary-btn">उपक्रम जोडा</button>
                     </div>
                 </form>
                 <div id="eventsList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Members Management -->
+            <div id="membersContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-2">मुख्य सदस्य व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण मुख्य सदस्य (ग्रामपंचायत सदस्य) जोडू शकता, त्यांची माहिती संपादित करू शकता किंवा हटवू शकता. (Here you can add main members (Gram Panchayat members), edit their information, or delete them.)</p>
+                <form id="memberForm" class="mb-6 bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">नवीन सदस्य जोडा</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">नाव (English)</label>
+                            <input type="text" id="memberName" placeholder="Member Name (English)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">नाव (मराठी)</label>
+                            <input type="text" id="memberNameMarathi" placeholder="सदस्याचे नाव (मराठी)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (English)</label>
+                            <input type="text" id="memberDesignation" placeholder="Designation (English)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (मराठी)</label>
+                            <input type="text" id="memberDesignationMarathi" placeholder="पदनाम (मराठी)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">क्रमांक (Order)</label>
+                            <input type="number" id="memberOrder" placeholder="Display Order" class="w-full border p-2 rounded" />
+                            <p class="text-xs text-gray-500 mt-1">रिकामे ठेवल्यास शेवटी जोडले जाईल</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">मोबाइल नंबर</label>
+                            <input type="text" id="memberMobile" placeholder="Mobile Number (Optional)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">प्रतिमा</label>
+                            <input type="file" id="memberImage" accept="image/*" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="primary-btn w-full">सदस्य जोडा</button>
+                        </div>
+                    </div>
+                </form>
+                <div id="membersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Committees Management -->
+            <div id="committeesContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-2">समिती व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण नवीन समिती जोडू शकता, समितीची माहिती संपादित करू शकता किंवा हटवू शकता. (Here you can add new committees, edit committee information, or delete committees.)</p>
+                <form id="committeeForm" class="mb-6 bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">नवीन समिती जोडा</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (English)</label>
+                            <input type="text" id="committeeTitle" placeholder="Committee Title (English)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (मराठी)</label>
+                            <input type="text" id="committeeTitleMarathi" placeholder="समितीचे शीर्षक (मराठी)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (English)</label>
+                            <textarea id="committeeDescription" placeholder="Description (English)" class="w-full border p-2 rounded" rows="3"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (मराठी)</label>
+                            <textarea id="committeeDescriptionMarathi" placeholder="वर्णन (मराठी)" class="w-full border p-2 rounded" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पथ (Path)</label>
+                            <input type="text" id="committeePath" placeholder="committee-path (auto-generated)" class="w-full border p-2 rounded" />
+                            <p class="text-xs text-gray-500 mt-1">रिकामे ठेवल्यास शीर्षकावरून तयार होईल</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">क्रमांक (Order)</label>
+                            <input type="number" id="committeeOrder" placeholder="Display Order" class="w-full border p-2 rounded" />
+                            <p class="text-xs text-gray-500 mt-1">रिकामे ठेवल्यास शेवटी जोडले जाईल</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="primary-btn w-full">समिती जोडा</button>
+                        </div>
+                    </div>
+                </form>
+                <div id="committeesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Committee Members Management -->
+            <div id="committeeMembersContent" class="p-6 hidden">
+                <h2 class="text-xl font-bold mb-2">समितीचे सदस्य व्यवस्थापन</h2>
+                <p class="text-sm text-gray-600 mb-4">येथे आपण विविध समितींचे सदस्य जोडू शकता, संपादित करू शकता किंवा हटवू शकता. (Here you can add, edit, or delete members of various committees.)</p>
+                
+                <!-- Committee Selection -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">समिती निवडा</label>
+                    <select id="committeeSelect" class="w-full border p-2 rounded mb-4">
+                        <option value="">-- समिती निवडा --</option>
+                        <option value="janarogyasamiti">जन आरोग्य समिती</option>
+                        <option value="krishivikassamiti">कृषी विकास समिती</option>
+                        <option value="shaleyvyavasthapansamiti">शालेय व्यवस्थापन समिती</option>
+                        <option value="rastaarakhasamiti">रस्ता आराखडा समिती</option>
+                        <option value="mahimalyadeviloksanchalitsadhankendra">माहीम अहिल्यादेवी लोक संचलित साधन केंद्र</option>
+                        <option value="gramsansadhangat">ग्रामसंसाधन गट</option>
+                    </select>
+                    
+                    <!-- Category dropdown for Shaley Vyavasthapan Samiti -->
+                    <div id="categorySelectContainer" class="hidden mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">शाळा प्रकार निवडा</label>
+                        <select id="categorySelect" class="w-full border p-2 rounded">
+                            <option value="">-- सर्व सदस्य --</option>
+                            <option value="Secondary School">माध्यमिक विद्यालय</option>
+                            <option value="Primary School">प्राथमिक शाळा</option>
+                        </select>
+                    </div>
+                    
+                    <button id="loadCommitteeMembers" class="primary-btn">समिती सदस्य लोड करा</button>
+                </div>
+
+                <!-- Add Member Form -->
+                <form id="committeeMemberForm" class="mb-6 bg-white p-6 rounded-lg shadow hidden">
+                    <h3 class="text-lg font-semibold mb-4">नवीन सदस्य जोडा</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">अ.नं. (Sr. No.)</label>
+                            <input type="number" id="cmSrNo" placeholder="Serial Number" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">नाव (English)</label>
+                            <input type="text" id="cmName" placeholder="Name (English)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">नाव (मराठी)</label>
+                            <input type="text" id="cmNameMarathi" placeholder="नाव (मराठी)" class="w-full border p-2 rounded" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (English)</label>
+                            <input type="text" id="cmDesignation" placeholder="Designation (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (मराठी)</label>
+                            <input type="text" id="cmDesignationMarathi" placeholder="पदनाम (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">प्रवर्ग/पोझिशन (English)</label>
+                            <input type="text" id="cmPosition" placeholder="Position/Category (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">प्रवर्ग/पोझिशन (मराठी)</label>
+                            <input type="text" id="cmPositionMarathi" placeholder="प्रवर्ग/पोझिशन (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पत्ता (English)</label>
+                            <input type="text" id="cmAddress" placeholder="Address (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">पत्ता (मराठी)</label>
+                            <input type="text" id="cmAddressMarathi" placeholder="पत्ता (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">मोबाइल नंबर</label>
+                            <input type="text" id="cmMobile" placeholder="Mobile Number" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">संपर्क क्रमांक</label>
+                            <input type="text" id="cmContact" placeholder="Contact Number" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">तालुका (English)</label>
+                            <input type="text" id="cmTaluka" placeholder="Taluka (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">तालुका (मराठी)</label>
+                            <input type="text" id="cmTalukaMarathi" placeholder="तालुका (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ग्रामपंचायत (English)</label>
+                            <input type="text" id="cmGrampanchayat" placeholder="Gram Panchayat (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ग्रामपंचायत (मराठी)</label>
+                            <input type="text" id="cmGrampanchayatMarathi" placeholder="ग्रामपंचायत (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">जातीचा प्रवर्ग (English)</label>
+                            <input type="text" id="cmCategory" placeholder="Category (English)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">जातीचा प्रवर्ग (मराठी)</label>
+                            <input type="text" id="cmCategoryMarathi" placeholder="जातीचा प्रवर्ग (मराठी)" class="w-full border p-2 rounded" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="primary-btn w-full">सदस्य जोडा</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Members List -->
+                <div id="committeeMembersList" class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">समिती सदस्य</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-green-600 to-green-700 text-white">
+                                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-sm">अ.नं.</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-sm">नाव</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-sm">पदनाम</th>
+                                    <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-sm">क्रिया</th>
+                                </tr>
+                            </thead>
+                            <tbody id="committeeMembersTableBody">
+                                <tr>
+                                    <td colspan="4" class="text-center py-8 text-gray-500">कृपया समिती निवडा</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Committee Member Modal -->
+            <div id="editCommitteeMemberModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" style="display: none;">
+                <div class="bg-white rounded-lg w-full max-w-4xl max-h-[95vh] overflow-hidden flex flex-col">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-2xl font-bold text-gray-900">समिती सदस्य संपादन करा</h2>
+                        <button id="closeEditCommitteeMemberModal" class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <form id="editCommitteeMemberForm">
+                            <input type="hidden" id="editCmId" />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">अ.नं. (Sr. No.)</label>
+                                    <input type="number" id="editCmSrNo" placeholder="Serial Number" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">नाव (English)</label>
+                                    <input type="text" id="editCmName" placeholder="Name (English)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">नाव (मराठी)</label>
+                                    <input type="text" id="editCmNameMarathi" placeholder="नाव (मराठी)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (English)</label>
+                                    <input type="text" id="editCmDesignation" placeholder="Designation (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (मराठी)</label>
+                                    <input type="text" id="editCmDesignationMarathi" placeholder="पदनाम (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">प्रवर्ग/पोझिशन (English)</label>
+                                    <input type="text" id="editCmPosition" placeholder="Position/Category (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">प्रवर्ग/पोझिशन (मराठी)</label>
+                                    <input type="text" id="editCmPositionMarathi" placeholder="प्रवर्ग/पोझिशन (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पत्ता (English)</label>
+                                    <input type="text" id="editCmAddress" placeholder="Address (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पत्ता (मराठी)</label>
+                                    <input type="text" id="editCmAddressMarathi" placeholder="पत्ता (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">मोबाइल नंबर</label>
+                                    <input type="text" id="editCmMobile" placeholder="Mobile Number" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">संपर्क क्रमांक</label>
+                                    <input type="text" id="editCmContact" placeholder="Contact Number" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">तालुका (English)</label>
+                                    <input type="text" id="editCmTaluka" placeholder="Taluka (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">तालुका (मराठी)</label>
+                                    <input type="text" id="editCmTalukaMarathi" placeholder="तालुका (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">ग्रामपंचायत (English)</label>
+                                    <input type="text" id="editCmGrampanchayat" placeholder="Gram Panchayat (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">ग्रामपंचायत (मराठी)</label>
+                                    <input type="text" id="editCmGrampanchayatMarathi" placeholder="ग्रामपंचायत (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">जातीचा प्रवर्ग (English)</label>
+                                    <input type="text" id="editCmCategory" placeholder="Category (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">जातीचा प्रवर्ग (मराठी)</label>
+                                    <input type="text" id="editCmCategoryMarathi" placeholder="जातीचा प्रवर्ग (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <div class="p-6 border-t border-gray-200 bg-gray-50">
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancelEditCommitteeMember" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                रद्द करा
+                            </button>
+                            <button id="saveEditCommitteeMember" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                जतन करा
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Committee Modal -->
+            <div id="editCommitteeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" style="display: none;">
+                <div class="bg-white rounded-lg w-full max-w-2xl max-h-[95vh] overflow-hidden flex flex-col">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-2xl font-bold text-gray-900">समिती संपादन करा</h2>
+                        <button id="closeEditCommitteeModal" class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <form id="editCommitteeForm">
+                            <input type="hidden" id="editCommitteeId" />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (English)</label>
+                                    <input type="text" id="editCommitteeTitle" placeholder="Committee Title (English)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (मराठी)</label>
+                                    <input type="text" id="editCommitteeTitleMarathi" placeholder="समितीचे शीर्षक (मराठी)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (English)</label>
+                                    <textarea id="editCommitteeDescription" placeholder="Description (English)" class="w-full border p-2 rounded" rows="3"></textarea>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (मराठी)</label>
+                                    <textarea id="editCommitteeDescriptionMarathi" placeholder="वर्णन (मराठी)" class="w-full border p-2 rounded" rows="3"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पथ (Path)</label>
+                                    <input type="text" id="editCommitteePath" placeholder="committee-path" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">क्रमांक (Order)</label>
+                                    <input type="number" id="editCommitteeOrder" placeholder="Display Order" class="w-full border p-2 rounded" />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">सक्रिय</label>
+                                    <select id="editCommitteeIsActive" class="w-full border p-2 rounded">
+                                        <option value="true">होय</option>
+                                        <option value="false">नाही</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <div class="p-6 border-t border-gray-200 bg-gray-50">
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancelEditCommittee" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                रद्द करा
+                            </button>
+                            <button id="saveEditCommittee" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                जतन करा
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Member Modal -->
+            <div id="editMemberModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" style="display: none;">
+                <div class="bg-white rounded-lg w-full max-w-2xl max-h-[95vh] overflow-hidden flex flex-col">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-2xl font-bold text-gray-900">सदस्य संपादन करा</h2>
+                        <button id="closeEditMemberModal" class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <form id="editMemberForm">
+                            <input type="hidden" id="editMemberId" />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">नाव (English)</label>
+                                    <input type="text" id="editMemberName" placeholder="Member Name (English)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">नाव (मराठी)</label>
+                                    <input type="text" id="editMemberNameMarathi" placeholder="सदस्याचे नाव (मराठी)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (English)</label>
+                                    <input type="text" id="editMemberDesignation" placeholder="Designation (English)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">पदनाम (मराठी)</label>
+                                    <input type="text" id="editMemberDesignationMarathi" placeholder="पदनाम (मराठी)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">क्रमांक (Order)</label>
+                                    <input type="number" id="editMemberOrder" placeholder="Display Order" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">मोबाइल नंबर</label>
+                                    <input type="text" id="editMemberMobile" placeholder="Mobile Number (Optional)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">प्रतिमा (नवीन प्रतिमा निवडा - पर्यायी)</label>
+                                    <input type="file" id="editMemberImage" accept="image/*" class="w-full border p-2 rounded" />
+                                    <p class="text-xs text-gray-500 mt-1">रिकामे ठेवल्यास वर्तमान प्रतिमा राहील</p>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">सक्रिय</label>
+                                    <select id="editMemberIsActive" class="w-full border p-2 rounded">
+                                        <option value="true">होय</option>
+                                        <option value="false">नाही</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <div class="p-6 border-t border-gray-200 bg-gray-50">
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancelEditMember" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                रद्द करा
+                            </button>
+                            <button id="saveEditMember" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                जतन करा
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Gallery Modal -->
+            <div id="editGalleryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" style="display: none;">
+                <div class="bg-white rounded-lg w-full max-w-2xl max-h-[95vh] overflow-hidden flex flex-col">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50">
+                        <h2 class="text-2xl font-bold text-gray-900">गॅलेरी आयटम संपादन करा</h2>
+                        <button id="closeEditGalleryModal" class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <form id="editGalleryForm">
+                            <input type="hidden" id="editGalleryId" />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (English)</label>
+                                    <input type="text" id="editGalleryTitle" placeholder="Title (English)" class="w-full border p-2 rounded" required />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">शीर्षक (मराठी)</label>
+                                    <input type="text" id="editGalleryTitleMr" placeholder="शीर्षक (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (English)</label>
+                                    <textarea id="editGalleryDescription" placeholder="Description (English)" class="w-full border p-2 rounded" rows="2"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">वर्णन (मराठी)</label>
+                                    <textarea id="editGalleryDescriptionMr" placeholder="वर्णन (मराठी)" class="w-full border p-2 rounded" rows="2"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text (English)</label>
+                                    <input type="text" id="editGalleryAltText" placeholder="Alt Text (English)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text (मराठी)</label>
+                                    <input type="text" id="editGalleryAltTextMr" placeholder="Alt Text (मराठी)" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">वर्ग (Category)</label>
+                                    <input type="text" id="editGalleryCategory" placeholder="Category" class="w-full border p-2 rounded" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">व्हिडिओ आहे का?</label>
+                                    <select id="editGalleryIsVideo" class="w-full border p-2 rounded">
+                                        <option value="false">नाही</option>
+                                        <option value="true">होय</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">प्रतिमा/व्हिडिओ (नवीन निवडा - पर्यायी)</label>
+                                    <input type="file" id="editGalleryImage" accept="image/*,video/*" class="w-full border p-2 rounded" />
+                                    <p class="text-xs text-gray-500 mt-1">रिकामे ठेवल्यास वर्तमान प्रतिमा/व्हिडिओ राहील</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <div class="p-6 border-t border-gray-200 bg-gray-50">
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancelEditGallery" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                रद्द करा
+                            </button>
+                            <button id="saveEditGallery" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                जतन करा
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- All Submissions Content -->

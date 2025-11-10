@@ -1,62 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
-import { getAllMembers } from "./data/members";
-
-// Function to get translated member name
-const getTranslatedMemberName = (englishName, lang, translations) => {
-  // Create a mapping of English names to translation keys
-  const nameMapping = {
-    "Sagar Vasantrao Pagar": "sagarVasantraoPagar",
-    "Govind Tulshiram Pagar": "govindTulshiramPagar", 
-    "Harshad Janardan Pagar": "harshadJanardanPagar",
-    "Devidas Tatyaba Pagar": "devidasTatyabaPagar",
-    "Sharad Ramchandra Bhavar": "sharadRamchandraBhavar",
-    "Shivaji Chindhu Ghodhade": "shivajiChindhuGhodhade",
-    "Sarika Ashok Pagar": "sarikaAshokPagar",
-    "Ratna Atmaram Pagar": "ratnaAtmaramPagar",
-    "Sonali Sunil Bhavar": "sonaliSunilBhavar",
-    "Aruna Khanderao Pagar": "arunaKhanderaoPagar",
-    "Laxmibai Chahadu Suryawanshi": "laxmibaiChahaduSuryawanshi",
-    "Priyanka Shivanath Kedare": "priyankaShivanathKedare",
-    "Roshan Balwant Suryavanshi": "roshanBalwantSuryavanshi",
-    "Sushil Rajendra Kedare": "sushilRajendraKedare",
-    "Ganesh Kedu Pagar": "ganeshKeduPagar",
-    "Kailas Ramdas Pagar": "kailasRamdasPagar",
-    "Sahebrao Nivritti Kank": "sahebraoNivrittiKank"
-  };
-
-  const translationKey = nameMapping[englishName];
-  if (translationKey && translations.directory?.members?.gramPanchayat) {
-    return translations.directory.members.gramPanchayat[translationKey] || englishName;
-  }
-  
-  // If no translation found, return the original name
-  return englishName;
-};
-
-// Function to get translated designation
-const getTranslatedDesignation = (englishDesignation, lang, translations) => {
-  // Create a mapping of English designations to translation keys
-  const designationMapping = {
-    "Sarpanch (Head of Village Council)": "sarpanch",
-    "Deputy Sarpanch (Deputy Head of Village Council)": "deputySarpanch",
-    "Member": "member",
-    "Member (Female)": "femaleMember",
-    "Gram Panchayat Officer": "gramPanchayatOfficer",
-    "Computer Operator": "computerOperator",
-    "Clerk Vasuli Karkun": "clerkVasuliKarkun",
-    "Gram Rojgar Sahayak": "gramRojgarSahayak",
-    "Water Supply Employee": "waterSupplyEmployee"
-  };
-
-  const translationKey = designationMapping[englishDesignation];
-  if (translationKey && translations.directory?.designations) {
-    return translations.directory.designations[translationKey] || englishDesignation;
-  }
-  
-  // If no translation found, return the original designation
-  return englishDesignation;
-};
+import { API_URL } from "../utils/config";
 
 export default function MembersSection() {
   const [memberImages, setMemberImages] = useState([]);
@@ -65,10 +9,47 @@ export default function MembersSection() {
   const { language, t } = useLanguage();
 
   useEffect(() => {
-    // Load static members only (for static export compatibility)
-    const staticMembers = getAllMembers(language);
-    setMemberImages(staticMembers);
-    setLoading(false);
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch members from API only
+        const response = await fetch(API_URL.MEMBERS);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const members = result.data
+              .filter(member => member.isActive)
+              .map(member => ({
+                _id: member._id,
+                memberName: language === 'mr' ? member.memberNameMarathi : member.memberName,
+                memberDesignation: language === 'mr' ? member.memberDesignationMarathi : member.memberDesignation,
+                imageUrl: member.imageUrl.startsWith('http') 
+                  ? member.imageUrl 
+                  : `${API_URL.BASE}${member.imageUrl}`,
+                order: member.order || 999,
+                isActive: member.isActive
+              }))
+              .sort((a, b) => a.order - b.order); // Sort by order
+              
+            setMemberImages(members);
+            setLoading(false);
+            return;
+          }
+        }
+        
+        // If API fails or returns no data, show empty state
+        setMemberImages([]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading members:', error);
+        setMemberImages([]);
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
   }, [language]);
 
   useEffect(() => {
@@ -85,7 +66,12 @@ export default function MembersSection() {
           {t('home.members.title')}
         </h2>
 
-        {loading ? (
+        {!loading && memberImages.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>
+            <p style={{ fontSize: '1.125rem' }}>कोणतेही सदस्य उपलब्ध नाहीत</p>
+            <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>No members available</p>
+          </div>
+        ) : loading ? (
           <div style={{ maxWidth: '1024px', margin: '0 auto' }}>
             {/* Loading state for Sarpanch and Deputy Sarpanch */}
             <div style={{ 
@@ -185,8 +171,9 @@ export default function MembersSection() {
               {memberImages
                 .filter(member => member.order <= 2)
                 .map((member) => {
-                  const translatedName = getTranslatedMemberName(member.memberName, language, t);
-                  const translatedDesignation = getTranslatedDesignation(member.memberDesignation, language, t);
+                  // Use API data directly
+                  const displayName = member.memberName;
+                  const displayDesignation = member.memberDesignation;
                   
                   // Make Sarpanch image bigger than Up-Sarpanch
                   const isSarpanch = member.order === 1;
@@ -211,7 +198,7 @@ export default function MembersSection() {
                       }}>
                         <img
                           src={member.imageUrl}
-                          alt={translatedName}
+                          alt={displayName}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -226,7 +213,7 @@ export default function MembersSection() {
                         textAlign: 'center',
                         lineHeight: '1.2',
                         color: '#1f2937'
-                      }}>{translatedDesignation}</h3>
+                      }}>{displayDesignation}</h3>
                       <p style={{
                         color: '#374151',
                         fontSize: isSarpanch ? (isMobile ? '1.05rem' : '1.25rem') : (isMobile ? '0.95rem' : '1.125rem'),
@@ -234,7 +221,7 @@ export default function MembersSection() {
                         lineHeight: '1.2',
                         fontWeight: '500',
                         marginTop: isSarpanch ? (isMobile ? '0.3rem' : '0.35rem') : (isMobile ? '0.4rem' : '0.6rem')
-                      }}>{translatedName}</p>
+                      }}>{displayName}</p>
                     </div>
                   );
                 })}
@@ -252,8 +239,9 @@ export default function MembersSection() {
               {memberImages
                 .filter(member => member.order > 2)
                 .map((member) => {
-                  const translatedName = getTranslatedMemberName(member.memberName, language, t);
-                  const translatedDesignation = getTranslatedDesignation(member.memberDesignation, language, t);
+                  // Use API data directly
+                  const displayName = member.memberName;
+                  const displayDesignation = member.memberDesignation;
                   
                   return (
                     <div key={member._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -268,7 +256,7 @@ export default function MembersSection() {
                       }}>
                         <img
                           src={member.imageUrl}
-                          alt={translatedName}
+                          alt={displayName}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -283,7 +271,7 @@ export default function MembersSection() {
                         textAlign: 'center',
                         lineHeight: '1.2',
                         color: '#1f2937'
-                      }}>{translatedDesignation}</h3>
+                      }}>{displayDesignation}</h3>
                       <p style={{
                         color: '#374151',
                         fontSize: isMobile ? '0.9rem' : '0.95rem',
@@ -291,7 +279,7 @@ export default function MembersSection() {
                         lineHeight: '1.2',
                         marginTop: isMobile ? '0.3rem' : '0.35rem',
                         fontWeight: '500'
-                      }}>{translatedName}</p>
+                      }}>{displayName}</p>
                     </div>
                   );
                 })}

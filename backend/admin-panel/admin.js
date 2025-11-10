@@ -6,6 +6,7 @@ let currentToken = localStorage.getItem('adminToken');
 let currentPage = 1;
 let currentFilters = {};
 let currentSection = 'dashboard';
+let currentCommitteePath = null;
 
 // Form type labels in Marathi
 const formTypeLabels = {
@@ -29,26 +30,70 @@ const statusLabels = {
     'completed': 'पूर्ण'
 };
 
+// Verify token is valid (simplified - just check if token exists)
+function hasValidToken() {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        console.log('No token found in localStorage');
+        return false;
+    }
+    
+    // Basic token format check (JWT tokens have 3 parts separated by dots)
+    if (token.split('.').length !== 3) {
+        console.log('Invalid token format');
+        localStorage.removeItem('adminToken');
+        return false;
+    }
+    
+    console.log('Token found in localStorage');
+    return true;
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    if (currentToken) {
+    console.log('=== Admin Panel Initializing ===');
+    
+    // Re-check token from localStorage (in case it was updated)
+    currentToken = localStorage.getItem('adminToken');
+    
+    console.log('Page loaded, checking token...');
+    console.log('Token exists:', !!currentToken);
+    console.log('Token value:', currentToken ? currentToken.substring(0, 20) + '...' : 'null');
+    
+    if (hasValidToken()) {
+        console.log('✅ Token found, showing admin panel');
         showAdminPanel();
+        
+        // Load data asynchronously (don't wait for it)
+        setTimeout(() => {
         loadStats();
         loadRecentSubmissions();
         // Bind management forms if present
         bindManagementForms();
         // Ensure management lists render immediately if their containers are on the page
+        if (document.getElementById('bannersList')) {
+            loadBanners();
+        }
         if (document.getElementById('galleryList')) {
             loadGallery();
         }
         if (document.getElementById('eventsList')) {
             loadEvents();
         }
+            if (document.getElementById('membersList')) {
+                loadMembers();
+            }
+            if (document.getElementById('committeesList')) {
+                loadCommittees();
+            }
+        }, 100);
     } else {
+        console.log('❌ No valid token, showing login page');
         showLoginPage();
     }
     
     setupEventListeners();
+    console.log('=== Initialization Complete ===');
 });
 
 // Setup event listeners
@@ -77,6 +122,232 @@ function setupEventListeners() {
     // Close modal
     document.getElementById('closeModal').addEventListener('click', closeSubmissionModal);
     document.getElementById('closeModalBtn').addEventListener('click', closeSubmissionModal);
+    
+    // Edit member modal buttons
+    const closeEditModal = document.getElementById('closeEditMemberModal');
+    const cancelEditMember = document.getElementById('cancelEditMember');
+    const saveEditMemberBtn = document.getElementById('saveEditMember');
+    
+    if (closeEditModal) {
+        closeEditModal.addEventListener('click', closeEditMemberModal);
+    }
+    if (cancelEditMember) {
+        cancelEditMember.addEventListener('click', closeEditMemberModal);
+    }
+    if (saveEditMemberBtn) {
+        saveEditMemberBtn.addEventListener('click', async () => {
+            await saveEditMember();
+        });
+    }
+    
+    // Close edit member modal when clicking outside
+    const editMemberModal = document.getElementById('editMemberModal');
+    if (editMemberModal) {
+        editMemberModal.addEventListener('click', function(e) {
+            if (e.target === editMemberModal) {
+                closeEditMemberModal();
+            }
+        });
+    }
+    
+    // Edit committee modal buttons
+    const closeEditCommitteeModalBtn = document.getElementById('closeEditCommitteeModal');
+    const cancelEditCommitteeBtn = document.getElementById('cancelEditCommittee');
+    const saveEditCommitteeBtn = document.getElementById('saveEditCommittee');
+    
+    if (closeEditCommitteeModalBtn) {
+        closeEditCommitteeModalBtn.addEventListener('click', () => {
+            closeEditCommitteeModal();
+        });
+    }
+    if (cancelEditCommitteeBtn) {
+        cancelEditCommitteeBtn.addEventListener('click', () => {
+            closeEditCommitteeModal();
+        });
+    }
+    if (saveEditCommitteeBtn) {
+        saveEditCommitteeBtn.addEventListener('click', async () => {
+            await saveEditCommittee();
+        });
+    }
+    
+    // Close edit committee modal when clicking outside
+    const editCommitteeModal = document.getElementById('editCommitteeModal');
+    if (editCommitteeModal) {
+        editCommitteeModal.addEventListener('click', function(e) {
+            if (e.target === editCommitteeModal) {
+                closeEditCommitteeModal();
+            }
+        });
+    }
+    
+    // Edit committee member modal buttons
+    const closeEditCommitteeMemberModalBtn = document.getElementById('closeEditCommitteeMemberModal');
+    const cancelEditCommitteeMemberBtn = document.getElementById('cancelEditCommitteeMember');
+    const saveEditCommitteeMemberBtn = document.getElementById('saveEditCommitteeMember');
+    
+    if (closeEditCommitteeMemberModalBtn) {
+        closeEditCommitteeMemberModalBtn.addEventListener('click', () => {
+            closeEditCommitteeMemberModal();
+        });
+    }
+    if (cancelEditCommitteeMemberBtn) {
+        cancelEditCommitteeMemberBtn.addEventListener('click', () => {
+            closeEditCommitteeMemberModal();
+        });
+    }
+    if (saveEditCommitteeMemberBtn) {
+        saveEditCommitteeMemberBtn.addEventListener('click', async () => {
+            await saveEditCommitteeMember();
+        });
+    }
+    
+    // Close edit committee member modal when clicking outside
+    const editCommitteeMemberModal = document.getElementById('editCommitteeMemberModal');
+    if (editCommitteeMemberModal) {
+        editCommitteeMemberModal.addEventListener('click', function(e) {
+            if (e.target === editCommitteeMemberModal) {
+                closeEditCommitteeMemberModal();
+            }
+        });
+    }
+    
+    // Edit gallery modal buttons
+    const closeEditGalleryModalBtn = document.getElementById('closeEditGalleryModal');
+    const cancelEditGalleryBtn = document.getElementById('cancelEditGallery');
+    const saveEditGalleryBtn = document.getElementById('saveEditGallery');
+    
+    if (closeEditGalleryModalBtn) {
+        closeEditGalleryModalBtn.addEventListener('click', () => {
+            closeEditGalleryModal();
+        });
+    }
+    if (cancelEditGalleryBtn) {
+        cancelEditGalleryBtn.addEventListener('click', () => {
+            closeEditGalleryModal();
+        });
+    }
+    if (saveEditGalleryBtn) {
+        saveEditGalleryBtn.addEventListener('click', async () => {
+            await saveEditGallery();
+        });
+    }
+    
+    // Close edit gallery modal when clicking outside
+    const editGalleryModal = document.getElementById('editGalleryModal');
+    if (editGalleryModal) {
+        editGalleryModal.addEventListener('click', function(e) {
+            if (e.target === editGalleryModal) {
+                closeEditGalleryModal();
+            }
+        });
+    }
+    
+    // Committee member form submission
+    const committeeMemberForm = document.getElementById('committeeMemberForm');
+    if (committeeMemberForm) {
+        committeeMemberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentCommitteePath) {
+                alert('कृपया समिती निवडा');
+                return;
+            }
+            
+            try {
+                // Auto-fill category for Shaley Vyavasthapan Samiti if category dropdown is selected
+                let category = document.getElementById('cmCategory').value || undefined;
+                let categoryMarathi = document.getElementById('cmCategoryMarathi').value || undefined;
+                
+                if (currentCommitteePath === 'shaleyvyavasthapansamiti') {
+                    const categorySelect = document.getElementById('categorySelect');
+                    if (categorySelect && categorySelect.value) {
+                        category = categorySelect.value;
+                        categoryMarathi = category === 'Secondary School' ? 'माध्यमिक विद्यालय' : 'प्राथमिक शाळा';
+                    }
+                }
+                
+                const resp = await fetch(`${API_BASE_URL}/committee-members`, {
+                    method: 'POST',
+                    headers: { 
+                        Authorization: `Bearer ${currentToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        committeePath: currentCommitteePath,
+                        srNo: document.getElementById('cmSrNo').value || undefined,
+                        name: document.getElementById('cmName').value,
+                        nameMarathi: document.getElementById('cmNameMarathi').value,
+                        designation: document.getElementById('cmDesignation').value || undefined,
+                        designationMarathi: document.getElementById('cmDesignationMarathi').value || undefined,
+                        position: document.getElementById('cmPosition').value || undefined,
+                        positionMarathi: document.getElementById('cmPositionMarathi').value || undefined,
+                        address: document.getElementById('cmAddress').value || undefined,
+                        addressMarathi: document.getElementById('cmAddressMarathi').value || undefined,
+                        mobile: document.getElementById('cmMobile').value || undefined,
+                        contact: document.getElementById('cmContact').value || undefined,
+                        taluka: document.getElementById('cmTaluka').value || undefined,
+                        talukaMarathi: document.getElementById('cmTalukaMarathi').value || undefined,
+                        grampanchayat: document.getElementById('cmGrampanchayat').value || undefined,
+                        grampanchayatMarathi: document.getElementById('cmGrampanchayatMarathi').value || undefined,
+                        category: category,
+                        categoryMarathi: categoryMarathi
+                    })
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
+                    alert(data.message || 'सदस्य जतन करण्यात अडचण आली');
+                    return;
+                }
+                alert('सदस्य यशस्वीरित्या जोडला गेला!');
+                await loadCommitteeMembers();
+                committeeMemberForm.reset();
+            } catch (error) {
+                console.error('Error adding committee member:', error);
+                alert('सदस्य जोडताना त्रुटी आली');
+            }
+        });
+    }
+    
+    // Load committee members button
+    const loadCommitteeMembersBtn = document.getElementById('loadCommitteeMembers');
+    if (loadCommitteeMembersBtn) {
+        loadCommitteeMembersBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            console.log('Load Committee Members button clicked');
+            await loadCommitteeMembers();
+        });
+    }
+    
+    // Also load when committee selection changes (optional - for auto-load)
+    const committeeSelect = document.getElementById('committeeSelect');
+    const categorySelectContainer = document.getElementById('categorySelectContainer');
+    const categorySelect = document.getElementById('categorySelect');
+    
+    if (committeeSelect) {
+        committeeSelect.addEventListener('change', (e) => {
+            console.log('Committee selected:', e.target.value);
+            const selectedPath = e.target.value;
+            
+            // Show category dropdown only for Shaley Vyavasthapan Samiti
+            if (selectedPath === 'shaleyvyavasthapansamiti') {
+                if (categorySelectContainer) {
+                    categorySelectContainer.classList.remove('hidden');
+                }
+            } else {
+                if (categorySelectContainer) {
+                    categorySelectContainer.classList.add('hidden');
+                }
+                if (categorySelect) {
+                    categorySelect.value = ''; // Reset category selection
+                }
+            }
+            
+            // Optionally auto-load when selection changes
+            // if (e.target.value) {
+            //     loadCommitteeMembers();
+            // }
+        });
+    }
     
     // Search input
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -112,6 +383,82 @@ function setupEventListeners() {
 
 // Bind add forms for gallery/events
 function bindManagementForms() {
+    const bannerForm = document.getElementById('bannerForm');
+    if (bannerForm) {
+        bannerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = bannerForm.getAttribute('data-edit-id');
+            const fd = new FormData();
+            fd.append('title', document.getElementById('bannerTitle').value);
+            fd.append('titleEn', document.getElementById('bannerTitleEn').value);
+            fd.append('titleMr', document.getElementById('bannerTitleMr').value);
+            fd.append('altText', document.getElementById('bannerAlt').value);
+            fd.append('altTextEn', document.getElementById('bannerAltEn').value);
+            fd.append('altTextMr', document.getElementById('bannerAltMr').value);
+            fd.append('order', document.getElementById('bannerOrder').value || '0');
+            fd.append('isActive', document.getElementById('bannerIsActive').value);
+            
+            const file = document.getElementById('bannerImage').files[0];
+            if (editId) {
+                // Update mode - image is optional
+                if (file) {
+                    fd.append('image', file);
+                }
+                fd.append('uploadTarget', 'banners');
+                try {
+                    const res = await fetch(`${API_BASE_URL}/banners/${editId}`, {
+                        method: 'PUT',
+                        headers: { Authorization: `Bearer ${currentToken}` },
+                        body: fd
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) {
+                        alert(data.message || 'बॅनर अपडेट करताना त्रुटी आली');
+                        return;
+                    }
+                    alert('बॅनर यशस्वीरित्या अपडेट केला गेला!');
+                    // Reset form to add mode
+                    bannerForm.removeAttribute('data-edit-id');
+                    const submitBtn = document.querySelector('#bannerForm button');
+                    if (submitBtn) {
+                        submitBtn.textContent = 'बॅनर जोडा';
+                    }
+                    await loadBanners();
+                    bannerForm.reset();
+                } catch (error) {
+                    console.error('Error updating banner:', error);
+                    alert('बॅनर अपडेट करताना त्रुटी आली');
+                }
+            } else {
+                // Create mode - image is required
+                if (!file) {
+                    alert('कृपया प्रतिमा निवडा');
+                    return;
+                }
+                fd.append('image', file);
+                fd.append('uploadTarget', 'banners');
+                try {
+                    const res = await fetch(`${API_BASE_URL}/banners`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${currentToken}` },
+                        body: fd
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) {
+                        alert(data.message || 'बॅनर जतन करण्यात अडचण आली');
+                        return;
+                    }
+                    alert('बॅनर यशस्वीरित्या जोडला गेला!');
+                    await loadBanners();
+                    bannerForm.reset();
+                } catch (error) {
+                    console.error('Error adding banner:', error);
+                    alert('बॅनर जोडताना त्रुटी आली');
+                }
+            }
+        });
+    }
+
     const galleryForm = document.getElementById('galleryForm');
     if (galleryForm) {
         galleryForm.addEventListener('submit', async (e) => {
@@ -120,17 +467,33 @@ function bindManagementForms() {
             fd.append('title', document.getElementById('galleryTitle').value);
             fd.append('altText', document.getElementById('galleryAlt').value);
             fd.append('category', document.getElementById('galleryCategory').value);
+            fd.append('isVideo', document.getElementById('galleryIsVideo').value);
             const file = document.getElementById('galleryImage').files[0];
-            if (!file) return;
+            if (!file) {
+                alert('कृपया प्रतिमा किंवा व्हिडिओ निवडा');
+                return;
+            }
             fd.append('image', file);
             fd.append('uploadTarget', 'gallery');
-            await fetch(`${API_BASE_URL}/gallery`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${currentToken}` },
-                body: fd
-            });
-            await loadGallery();
-            galleryForm.reset();
+            
+            try {
+                const res = await fetch(`${API_BASE_URL}/gallery`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                    body: fd
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    alert(data.message || 'प्रतिमा/व्हिडिओ जोडताना त्रुटी आली');
+                    return;
+                }
+                alert('प्रतिमा/व्हिडिओ यशस्वीरित्या जोडले गेले!');
+                await loadGallery();
+                galleryForm.reset();
+            } catch (error) {
+                console.error('Error uploading gallery item:', error);
+                alert('प्रतिमा/व्हिडिओ जोडताना त्रुटी आली');
+            }
         });
     }
 
@@ -138,44 +501,153 @@ function bindManagementForms() {
     if (eventForm) {
         eventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const editId = eventForm.getAttribute('data-edit-id');
             const fd = new FormData();
             fd.append('title', document.getElementById('eventTitle').value);
-            // Normalize status to API enum (Upcoming|Ongoing|Completed)
-            const rawStatus = (document.getElementById('eventStatus').value || '').toString().trim();
-            const normalizedMap = {
-                'upcoming': 'Upcoming',
-                'ongoing': 'Ongoing',
-                'running': 'Ongoing',
-                'completed': 'Completed',
-                // Marathi common inputs
-                'येणारे': 'Upcoming',
-                'चालू': 'Ongoing',
-                'पूर्ण': 'Completed'
-            };
-            const normalizedKey = rawStatus.toLowerCase();
-            const safeStatus = normalizedMap[normalizedKey] || '';
-            if (safeStatus) fd.append('status', safeStatus);
-            fd.append('date', document.getElementById('eventDate').value);
-            fd.append('altText', document.getElementById('eventAlt').value);
+            fd.append('titleEn', document.getElementById('eventTitleEn').value);
+            fd.append('titleMr', document.getElementById('eventTitleMr').value);
             fd.append('description', document.getElementById('eventDescription').value);
+            fd.append('descriptionEn', document.getElementById('eventDescriptionEn').value);
+            fd.append('descriptionMr', document.getElementById('eventDescriptionMr').value);
+            fd.append('altText', document.getElementById('eventAlt').value);
+            fd.append('altTextEn', document.getElementById('eventAltEn').value);
+            fd.append('altTextMr', document.getElementById('eventAltMr').value);
+            fd.append('status', document.getElementById('eventStatus').value || 'Completed');
+            fd.append('date', document.getElementById('eventDate').value);
+            
             const file = document.getElementById('eventImage').files[0];
-            if (!file) return;
-            fd.append('image', file);
-            fd.append('uploadTarget', 'events');
-            const resp = await fetch(`${API_BASE_URL}/events`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${currentToken}` },
-                body: fd
-            });
-            try {
-                const data = await resp.json();
-                if (!resp.ok || !data.success) {
-                    alert(data.message || 'उपक्रम जतन करण्यात अडचण आली. Status should be Upcoming/Ongoing/Completed.');
+            if (editId) {
+                // Update mode - image is optional
+                if (file) {
+                    fd.append('image', file);
+                }
+                fd.append('uploadTarget', 'events');
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/events/${editId}`, {
+                        method: 'PUT',
+                        headers: { Authorization: `Bearer ${currentToken}` },
+                        body: fd
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok || !data.success) {
+                        alert(data.message || 'उपक्रम अपडेट करताना त्रुटी आली');
+                        return;
+                    }
+                    alert('उपक्रम यशस्वीरित्या अपडेट केला गेला!');
+                    // Reset form to add mode
+                    eventForm.removeAttribute('data-edit-id');
+                    const submitBtn = document.querySelector('#eventForm button');
+                    if (submitBtn) {
+                        submitBtn.textContent = 'उपक्रम जोडा';
+                    }
+                    await loadEvents();
+                    eventForm.reset();
+                } catch (error) {
+                    console.error('Error updating event:', error);
+                    alert('उपक्रम अपडेट करताना त्रुटी आली');
+                }
+            } else {
+                // Create mode - image is required
+                if (!file) {
+                    alert('कृपया प्रतिमा निवडा');
                     return;
                 }
-            } catch (_) { /* ignore parse issues */ }
-            await loadEvents();
-            eventForm.reset();
+                fd.append('image', file);
+                fd.append('uploadTarget', 'events');
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/events`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${currentToken}` },
+                        body: fd
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok || !data.success) {
+                        alert(data.message || 'उपक्रम जतन करण्यात अडचण आली');
+                        return;
+                    }
+                    alert('उपक्रम यशस्वीरित्या जोडला गेला!');
+                    await loadEvents();
+                    eventForm.reset();
+                } catch (error) {
+                    console.error('Error adding event:', error);
+                    alert('उपक्रम जोडताना त्रुटी आली');
+                }
+            }
+        });
+    }
+
+    const memberForm = document.getElementById('memberForm');
+    if (memberForm) {
+        memberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fd = new FormData();
+            fd.append('memberName', document.getElementById('memberName').value);
+            fd.append('memberNameMarathi', document.getElementById('memberNameMarathi').value);
+            fd.append('memberDesignation', document.getElementById('memberDesignation').value);
+            fd.append('memberDesignationMarathi', document.getElementById('memberDesignationMarathi').value);
+            const order = document.getElementById('memberOrder').value;
+            if (order) fd.append('order', order);
+            const mobile = document.getElementById('memberMobile').value;
+            if (mobile) fd.append('mobile', mobile);
+            const file = document.getElementById('memberImage').files[0];
+            if (!file) {
+                alert('कृपया प्रतिमा निवडा');
+                return;
+            }
+            fd.append('image', file);
+            try {
+                const resp = await fetch(`${API_BASE_URL}/members`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                    body: fd
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
+                    alert(data.message || 'सदस्य जतन करण्यात अडचण आली');
+                    return;
+                }
+                alert('सदस्य यशस्वीरित्या जोडला गेला!');
+                await loadMembers();
+                memberForm.reset();
+            } catch (error) {
+                console.error('Error adding member:', error);
+                alert('सदस्य जोडताना त्रुटी आली');
+            }
+        });
+    }
+
+    const committeeForm = document.getElementById('committeeForm');
+    if (committeeForm) {
+        committeeForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const resp = await fetch(`${API_BASE_URL}/committees`, {
+                    method: 'POST',
+                    headers: { 
+                        Authorization: `Bearer ${currentToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: document.getElementById('committeeTitle').value,
+                        titleMarathi: document.getElementById('committeeTitleMarathi').value,
+                        description: document.getElementById('committeeDescription').value,
+                        descriptionMarathi: document.getElementById('committeeDescriptionMarathi').value,
+                        path: document.getElementById('committeePath').value || undefined,
+                        order: document.getElementById('committeeOrder').value || undefined
+                    })
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
+                    alert(data.message || 'समिती जतन करण्यात अडचण आली');
+                    return;
+                }
+                alert('समिती यशस्वीरित्या जोडली गेली!');
+                await loadCommittees();
+                committeeForm.reset();
+            } catch (error) {
+                console.error('Error adding committee:', error);
+                alert('समिती जोडताना त्रुटी आली');
+            }
         });
     }
 }
@@ -192,25 +664,284 @@ async function loadGallery() {
             card.className = 'bg-white rounded-lg shadow p-3 overflow-hidden';
             card.innerHTML = `
                 <div class="relative">
-                    <img src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" alt="${item.altText || ''}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" />
+                    ${item.isVideo ? `
+                        <video src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" controls></video>
+                    ` : `
+                        <img src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" alt="${item.altText || ''}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" />
+                    `}
                 </div>
                 <div class="mt-2 flex items-center justify-between">
                     <div class="font-semibold text-gray-800 truncate text-sm" title="${item.title}">${item.title}</div>
-                    <button data-del-gallery="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    <div class="flex gap-2">
+                        <button data-edit-gallery="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
+                        <button data-del-gallery="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    </div>
                 </div>
             `;
             list.appendChild(card);
         });
+        // Bind edit buttons
+        list.querySelectorAll('[data-edit-gallery]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = btn.getAttribute('data-edit-gallery');
+                await openEditGalleryModal(id);
+            });
+        });
         // Bind delete buttons
         list.querySelectorAll('[data-del-gallery]').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.getAttribute('data-del-gallery');
-                await fetch(`${API_BASE_URL}/gallery/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
-                loadGallery();
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('आपण खात्री आहे की आपण ही प्रतिमा हटवू इच्छिता?')) {
+                    const id = btn.getAttribute('data-del-gallery');
+                    await fetch(`${API_BASE_URL}/gallery/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                    loadGallery();
+                }
             });
         });
     } catch (e) {
         console.error('Load gallery failed', e);
+    }
+}
+
+// Open edit gallery modal
+async function openEditGalleryModal(galleryId) {
+    try {
+        if (!galleryId) {
+            alert('गॅलेरी आयटम ID आढळले नाही');
+            return;
+        }
+        
+        console.log('Loading gallery item:', galleryId);
+        const res = await fetch(`${API_BASE_URL}/gallery/${galleryId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ message: 'Unknown error' }));
+            console.error('Error response:', res.status, errorData);
+            alert(`त्रुटी: ${errorData.message || 'गॅलेरी आयटम माहिती लोड करताना त्रुटी आली'}`);
+            return;
+        }
+        
+        const data = await res.json();
+        console.log('Gallery item data:', data);
+        console.log('Gallery item data.data:', data.data);
+        
+        if (!data.success || !data.data) {
+            console.error('Invalid response:', data);
+            alert(data.message || 'गॅलेरी आयटम माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const item = data.data;
+        console.log('Gallery item:', item);
+        console.log('Item title:', item.title);
+        console.log('Item _id:', item._id);
+        
+        // Check if form elements exist
+        const editGalleryId = document.getElementById('editGalleryId');
+        const editGalleryTitle = document.getElementById('editGalleryTitle');
+        const editGalleryModal = document.getElementById('editGalleryModal');
+        
+        if (!editGalleryId || !editGalleryTitle || !editGalleryModal) {
+            console.error('Form elements not found!');
+            alert('गॅलेरी संपादन फॉर्म आढळले नाही');
+            return;
+        }
+        
+        // Populate form fields
+        editGalleryId.value = item._id || '';
+        editGalleryTitle.value = item.title || '';
+        document.getElementById('editGalleryTitleMr').value = item.titleMr || '';
+        document.getElementById('editGalleryDescription').value = item.description || '';
+        document.getElementById('editGalleryDescriptionMr').value = item.descriptionMr || '';
+        document.getElementById('editGalleryAltText').value = item.altText || '';
+        document.getElementById('editGalleryAltTextMr').value = item.altTextMr || '';
+        document.getElementById('editGalleryCategory').value = item.category || '';
+        document.getElementById('editGalleryIsVideo').value = item.isVideo ? 'true' : 'false';
+        
+        // Clear image input
+        document.getElementById('editGalleryImage').value = '';
+        
+        console.log('Form populated, showing modal...');
+        
+        // Show modal
+        editGalleryModal.classList.remove('hidden');
+        editGalleryModal.style.display = 'flex';
+        console.log('Modal should be visible now');
+    } catch (e) {
+        console.error('Error loading gallery item for edit:', e);
+        alert('गॅलेरी आयटम माहिती लोड करताना त्रुटी आली');
+    }
+}
+
+// Close edit gallery modal
+function closeEditGalleryModal() {
+    const modal = document.getElementById('editGalleryModal');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.getElementById('editGalleryForm').reset();
+}
+
+// Save edit gallery
+async function saveEditGallery() {
+    try {
+        const id = document.getElementById('editGalleryId').value;
+        if (!id) {
+            alert('गॅलेरी आयटम ID आढळले नाही');
+            return;
+        }
+        
+        const fd = new FormData();
+        fd.append('title', document.getElementById('editGalleryTitle').value);
+        fd.append('titleMr', document.getElementById('editGalleryTitleMr').value);
+        fd.append('description', document.getElementById('editGalleryDescription').value);
+        fd.append('descriptionMr', document.getElementById('editGalleryDescriptionMr').value);
+        fd.append('altText', document.getElementById('editGalleryAltText').value);
+        fd.append('altTextMr', document.getElementById('editGalleryAltTextMr').value);
+        fd.append('category', document.getElementById('editGalleryCategory').value);
+        fd.append('isVideo', document.getElementById('editGalleryIsVideo').value);
+        
+        const file = document.getElementById('editGalleryImage').files[0];
+        if (file) {
+            fd.append('image', file);
+        }
+        
+        const res = await fetch(`${API_BASE_URL}/gallery/${id}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${currentToken}` },
+            body: fd
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok || !data.success) {
+            alert(data.message || 'गॅलेरी आयटम अपडेट करताना त्रुटी आली');
+            return;
+        }
+        
+        alert('गॅलेरी आयटम यशस्वीरित्या अपडेट केले गेले!');
+        closeEditGalleryModal();
+        await loadGallery();
+    } catch (e) {
+        console.error('Error saving gallery item:', e);
+        alert('गॅलेरी आयटम अपडेट करताना त्रुटी आली');
+    }
+}
+
+async function loadBanners() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/banners`);
+        const data = await res.json();
+        const list = document.getElementById('bannersList');
+        if (!list) return;
+        list.innerHTML = '';
+        (data.data || []).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow p-3 overflow-hidden';
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${API_BASE_URL.replace('/api','')}${item.imageUrl}" alt="${item.altText || ''}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;" />
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                    <div class="font-semibold text-gray-800 truncate text-sm" title="${item.title}">${item.title}</div>
+                    <div class="flex gap-2">
+                        <button data-edit-banner="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
+                        <button data-del-banner="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-600 mt-1">Order: ${item.order || 0} • ${item.isActive ? 'Active' : 'Inactive'}</div>
+            `;
+            list.appendChild(card);
+        });
+        // Bind edit buttons
+        list.querySelectorAll('[data-edit-banner]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = btn.getAttribute('data-edit-banner');
+                await openEditBannerModal(id);
+            });
+        });
+        // Bind delete buttons
+        list.querySelectorAll('[data-del-banner]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('आपण खात्री आहे की आपण हा बॅनर हटवू इच्छिता?')) {
+                    const id = btn.getAttribute('data-del-banner');
+                    await fetch(`${API_BASE_URL}/banners/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                    loadBanners();
+                }
+            });
+        });
+    } catch (e) {
+        console.error('Load banners failed', e);
+    }
+}
+
+// Open edit banner modal
+async function openEditBannerModal(bannerId) {
+    try {
+        if (!bannerId) {
+            alert('बॅनर ID आढळले नाही');
+            return;
+        }
+        
+        console.log('Loading banner:', bannerId);
+        const res = await fetch(`${API_BASE_URL}/banners/${bannerId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ message: 'Unknown error' }));
+            console.error('Error response:', res.status, errorData);
+            alert(`त्रुटी: ${errorData.message || 'बॅनर माहिती लोड करताना त्रुटी आली'}`);
+            return;
+        }
+        
+        const data = await res.json();
+        console.log('Banner data:', data);
+        
+        if (!data.success || !data.data) {
+            console.error('Invalid response:', data);
+            alert(data.message || 'बॅनर माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const item = data.data;
+        console.log('Banner item:', item);
+        
+        // Populate form fields
+        document.getElementById('bannerTitle').value = item.title || '';
+        document.getElementById('bannerTitleEn').value = item.titleEn || '';
+        document.getElementById('bannerTitleMr').value = item.titleMr || '';
+        document.getElementById('bannerAlt').value = item.altText || '';
+        document.getElementById('bannerAltEn').value = item.altTextEn || '';
+        document.getElementById('bannerAltMr').value = item.altTextMr || '';
+        document.getElementById('bannerOrder').value = item.order || 0;
+        document.getElementById('bannerIsActive').value = item.isActive ? 'true' : 'false';
+        
+        // Clear image input
+        document.getElementById('bannerImage').value = '';
+        
+        // Store banner ID for update
+        document.getElementById('bannerForm').setAttribute('data-edit-id', bannerId);
+        
+        // Change form button text
+        const submitBtn = document.querySelector('#bannerForm button');
+        if (submitBtn) {
+            submitBtn.textContent = 'बॅनर अपडेट करा';
+        }
+        
+        // Scroll to form
+        document.getElementById('bannerForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+        console.error('Error loading banner for edit:', e);
+        alert('बॅनर माहिती लोड करताना त्रुटी आली');
     }
 }
 
@@ -230,17 +961,32 @@ async function loadEvents() {
                 </div>
                 <div class="mt-2 font-semibold text-gray-800 text-sm">${item.title}</div>
                 <div class="text-sm text-gray-600">${item.status || ''} • ${item.date || ''}</div>
-                <div class="mt-2 flex justify-end">
+                <div class="mt-2 flex gap-2 justify-end">
+                    <button data-edit-event="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
                     <button data-del-event="${item._id}" class="action-btn px-3 py-1 rounded-md text-white text-sm" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
                 </div>
             `;
             list.appendChild(card);
         });
+        // Bind edit buttons
+        list.querySelectorAll('[data-edit-event]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = btn.getAttribute('data-edit-event');
+                await openEditEventModal(id);
+            });
+        });
+        // Bind delete buttons
         list.querySelectorAll('[data-del-event]').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.getAttribute('data-del-event');
-                await fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
-                loadEvents();
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('आपण खात्री आहे की आपण हा उपक्रम हटवू इच्छिता?')) {
+                    const id = btn.getAttribute('data-del-event');
+                    await fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` }});
+                    loadEvents();
+                }
             });
         });
     } catch (e) {
@@ -248,16 +994,755 @@ async function loadEvents() {
     }
 }
 
+// Open edit event modal
+async function openEditEventModal(eventId) {
+    try {
+        if (!eventId) {
+            alert('उपक्रम ID आढळले नाही');
+            return;
+        }
+        
+        console.log('Loading event:', eventId);
+        const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ message: 'Unknown error' }));
+            console.error('Error response:', res.status, errorData);
+            alert(`त्रुटी: ${errorData.message || 'उपक्रम माहिती लोड करताना त्रुटी आली'}`);
+            return;
+        }
+        
+        const data = await res.json();
+        console.log('Event data:', data);
+        
+        if (!data.success || !data.data) {
+            console.error('Invalid response:', data);
+            alert(data.message || 'उपक्रम माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const item = data.data;
+        console.log('Event item:', item);
+        
+        // Populate form fields
+        document.getElementById('eventTitle').value = item.title || '';
+        document.getElementById('eventTitleEn').value = item.titleEn || '';
+        document.getElementById('eventTitleMr').value = item.titleMr || '';
+        document.getElementById('eventDescription').value = item.description || '';
+        document.getElementById('eventDescriptionEn').value = item.descriptionEn || '';
+        document.getElementById('eventDescriptionMr').value = item.descriptionMr || '';
+        document.getElementById('eventAlt').value = item.altText || '';
+        document.getElementById('eventAltEn').value = item.altTextEn || '';
+        document.getElementById('eventAltMr').value = item.altTextMr || '';
+        document.getElementById('eventStatus').value = item.status || 'Completed';
+        document.getElementById('eventDate').value = item.date || '';
+        
+        // Clear image input
+        document.getElementById('eventImage').value = '';
+        
+        // Store event ID for update
+        document.getElementById('eventForm').setAttribute('data-edit-id', eventId);
+        
+        // Change form button text
+        const submitBtn = document.querySelector('#eventForm button');
+        if (submitBtn) {
+            submitBtn.textContent = 'उपक्रम अपडेट करा';
+        }
+        
+        // Scroll to form
+        document.getElementById('eventForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+        console.error('Error loading event for edit:', e);
+        alert('उपक्रम माहिती लोड करताना त्रुटी आली');
+    }
+}
+
+async function loadMembers() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/members/all`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        const list = document.getElementById('membersList');
+        if (!list) return;
+        list.innerHTML = '';
+        (data.data || []).forEach(member => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow p-4 overflow-hidden';
+            card.innerHTML = `
+                <div class="relative mb-3">
+                    <img src="${API_BASE_URL.replace('/api','')}${member.imageUrl}" alt="${member.memberNameMarathi || member.memberName}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;" />
+                </div>
+                <div class="mb-2">
+                    <div class="font-semibold text-gray-800 text-sm mb-1">${member.memberNameMarathi || member.memberName}</div>
+                    <div class="text-xs text-gray-600 mb-1">${member.memberName}</div>
+                    <div class="text-sm font-medium text-green-600">${member.memberDesignationMarathi || member.memberDesignation}</div>
+                    ${member.mobile ? `<div class="text-xs text-gray-500 mt-1">📱 ${member.mobile}</div>` : ''}
+                    <div class="text-xs text-gray-500 mt-2">क्रमांक: ${member.order}</div>
+                    <div class="mt-3 flex gap-2">
+                        <button data-edit-member="${member._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
+                        <button data-del-member="${member._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    </div>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        // Bind delete buttons
+        list.querySelectorAll('[data-del-member]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('तुम्हाला खात्री आहे की तुम्ही हा सदस्य हटवू इच्छिता?')) return;
+                const id = btn.getAttribute('data-del-member');
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/members/${id}`, { 
+                        method: 'DELETE', 
+                        headers: { Authorization: `Bearer ${currentToken }` }
+                    });
+                    const data = await resp.json();
+                    if (data.success) {
+                        alert('सदस्य यशस्वीरित्या हटवला गेला');
+                        loadMembers();
+                    } else {
+                        alert('सदस्य हटवताना त्रुटी आली');
+                    }
+                } catch (e) {
+                    console.error('Delete member failed', e);
+                    alert('सदस्य हटवताना त्रुटी आली');
+                }
+            });
+        });
+        
+        // Bind edit buttons
+        list.querySelectorAll('[data-edit-member]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-edit-member');
+                await openEditMemberModal(id);
+            });
+        });
+    } catch (e) {
+        console.error('Load members failed', e);
+    }
+}
+
+// Open edit member modal
+async function openEditMemberModal(memberId) {
+    try {
+        // Fetch member details
+        const res = await fetch(`${API_BASE_URL}/members/${memberId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success || !data.data) {
+            alert('सदस्य माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const member = data.data;
+        
+        // Populate form fields
+        document.getElementById('editMemberId').value = member._id;
+        document.getElementById('editMemberName').value = member.memberName || '';
+        document.getElementById('editMemberNameMarathi').value = member.memberNameMarathi || '';
+        document.getElementById('editMemberDesignation').value = member.memberDesignation || '';
+        document.getElementById('editMemberDesignationMarathi').value = member.memberDesignationMarathi || '';
+        document.getElementById('editMemberOrder').value = member.order || '';
+        document.getElementById('editMemberMobile').value = member.mobile || '';
+        document.getElementById('editMemberIsActive').value = member.isActive ? 'true' : 'false';
+        
+        // Clear image input
+        document.getElementById('editMemberImage').value = '';
+        
+        // Show modal
+        const modal = document.getElementById('editMemberModal');
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    } catch (e) {
+        console.error('Error loading member for edit:', e);
+        alert('सदस्य माहिती लोड करताना त्रुटी आली');
+    }
+}
+
+// Close edit member modal
+function closeEditMemberModal() {
+    const modal = document.getElementById('editMemberModal');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.getElementById('editMemberForm').reset();
+}
+
+// Save edited member
+async function saveEditMember() {
+    try {
+        const memberId = document.getElementById('editMemberId').value;
+        if (!memberId) {
+            alert('सदस्य ID आढळले नाही');
+            return;
+        }
+        
+        const fd = new FormData();
+        fd.append('memberName', document.getElementById('editMemberName').value);
+        fd.append('memberNameMarathi', document.getElementById('editMemberNameMarathi').value);
+        fd.append('memberDesignation', document.getElementById('editMemberDesignation').value);
+        fd.append('memberDesignationMarathi', document.getElementById('editMemberDesignationMarathi').value);
+        
+        const order = document.getElementById('editMemberOrder').value;
+        if (order) fd.append('order', order);
+        
+        const mobile = document.getElementById('editMemberMobile').value;
+        if (mobile) fd.append('mobile', mobile);
+        
+        const isActive = document.getElementById('editMemberIsActive').value === 'true';
+        fd.append('isActive', isActive);
+        
+        // Only append image if a new one is selected
+        const imageFile = document.getElementById('editMemberImage').files[0];
+        if (imageFile) {
+            fd.append('image', imageFile);
+        }
+        
+        const resp = await fetch(`${API_BASE_URL}/members/${memberId}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${currentToken}` },
+            body: fd
+        });
+        
+        const data = await resp.json();
+        if (!resp.ok || !data.success) {
+            alert(data.message || 'सदस्य अपडेट करताना त्रुटी आली');
+            return;
+        }
+        
+        alert('सदस्य यशस्वीरित्या अपडेट केला गेला!');
+        closeEditMemberModal();
+        loadMembers();
+    } catch (e) {
+        console.error('Error updating member:', e);
+        alert('सदस्य अपडेट करताना त्रुटी आली');
+    }
+}
+
+// Load committees
+async function loadCommittees() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/committees/all`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        const list = document.getElementById('committeesList');
+        if (!list) return;
+        list.innerHTML = '';
+        (data.data || []).forEach(committee => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow p-4 overflow-hidden';
+            card.innerHTML = `
+                <div class="mb-2">
+                    <div class="font-semibold text-gray-800 text-sm mb-1">${committee.titleMarathi || committee.title}</div>
+                    <div class="text-xs text-gray-600 mb-1">${committee.title}</div>
+                    ${committee.descriptionMarathi || committee.description ? `<div class="text-xs text-gray-500 mt-2 mb-2">${(committee.descriptionMarathi || committee.description).substring(0, 100)}${(committee.descriptionMarathi || committee.description).length > 100 ? '...' : ''}</div>` : ''}
+                    <div class="text-xs text-gray-500 mt-2">पथ: ${committee.path}</div>
+                    <div class="text-xs text-gray-500">क्रमांक: ${committee.order}</div>
+                    <div class="text-xs mt-2">
+                        <span class="status-badge ${committee.isActive ? 'status-approved' : 'status-rejected'}">
+                            ${committee.isActive ? 'सक्रिय' : 'निष्क्रिय'}
+                        </span>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <button data-edit-committee="${committee._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
+                        <button data-del-committee="${committee._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    </div>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        // Bind delete buttons
+        list.querySelectorAll('[data-del-committee]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!confirm('तुम्हाला खात्री आहे की तुम्ही ही समिती हटवू इच्छिता?')) return;
+                const id = btn.getAttribute('data-del-committee');
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/committees/${id}`, { 
+                        method: 'DELETE', 
+                        headers: { Authorization: `Bearer ${currentToken }` }
+                    });
+                    const data = await resp.json();
+                    if (data.success) {
+                        alert('समिती यशस्वीरित्या हटवली गेली');
+                        loadCommittees();
+                    } else {
+                        alert('समिती हटवताना त्रुटी आली');
+                    }
+                } catch (e) {
+                    console.error('Delete committee failed', e);
+                    alert('समिती हटवताना त्रुटी आली');
+                }
+            });
+        });
+        // Bind edit buttons
+        list.querySelectorAll('[data-edit-committee]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-edit-committee');
+                await openEditCommitteeModal(id);
+            });
+        });
+    } catch (e) {
+        console.error('Load committees failed', e);
+    }
+}
+
+// Open edit committee modal
+async function openEditCommitteeModal(committeeId) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/committees/${committeeId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success || !data.data) {
+            alert('समिती माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const committee = data.data;
+        
+        // Populate form fields
+        document.getElementById('editCommitteeId').value = committee._id;
+        document.getElementById('editCommitteeTitle').value = committee.title || '';
+        document.getElementById('editCommitteeTitleMarathi').value = committee.titleMarathi || '';
+        document.getElementById('editCommitteeDescription').value = committee.description || '';
+        document.getElementById('editCommitteeDescriptionMarathi').value = committee.descriptionMarathi || '';
+        document.getElementById('editCommitteePath').value = committee.path || '';
+        document.getElementById('editCommitteeOrder').value = committee.order || '';
+        document.getElementById('editCommitteeIsActive').value = committee.isActive ? 'true' : 'false';
+        
+        // Show modal
+        const modal = document.getElementById('editCommitteeModal');
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    } catch (e) {
+        console.error('Error loading committee for edit:', e);
+        alert('समिती माहिती लोड करताना त्रुटी आली');
+    }
+}
+
+// Close edit committee modal
+function closeEditCommitteeModal() {
+    const modal = document.getElementById('editCommitteeModal');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.getElementById('editCommitteeForm').reset();
+}
+
+// Save edited committee
+async function saveEditCommittee() {
+    try {
+        const committeeId = document.getElementById('editCommitteeId').value;
+        if (!committeeId) {
+            alert('समिती ID आढळले नाही');
+            return;
+        }
+        
+        const resp = await fetch(`${API_BASE_URL}/committees/${committeeId}`, {
+            method: 'PUT',
+            headers: { 
+                Authorization: `Bearer ${currentToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: document.getElementById('editCommitteeTitle').value,
+                titleMarathi: document.getElementById('editCommitteeTitleMarathi').value,
+                description: document.getElementById('editCommitteeDescription').value,
+                descriptionMarathi: document.getElementById('editCommitteeDescriptionMarathi').value,
+                path: document.getElementById('editCommitteePath').value || undefined,
+                order: document.getElementById('editCommitteeOrder').value || undefined,
+                isActive: document.getElementById('editCommitteeIsActive').value === 'true'
+            })
+        });
+        
+        const data = await resp.json();
+        if (!resp.ok || !data.success) {
+            alert(data.message || 'समिती अपडेट करताना त्रुटी आली');
+            return;
+        }
+        
+        alert('समिती यशस्वीरित्या अपडेट केली गेली!');
+        closeEditCommitteeModal();
+        loadCommittees();
+    } catch (e) {
+        console.error('Error updating committee:', e);
+        alert('समिती अपडेट करताना त्रुटी आली');
+    }
+}
+
+// Committee Members Management
+// currentCommitteePath is already declared at the top
+
+// Load committee members
+async function loadCommitteeMembers() {
+    const committeePath = document.getElementById('committeeSelect').value;
+    if (!committeePath) {
+        alert('कृपया समिती निवडा');
+        return;
+    }
+    
+    currentCommitteePath = committeePath;
+    
+    // Get selected category if Shaley Vyavasthapan Samiti is selected
+    const categorySelect = document.getElementById('categorySelect');
+    const selectedCategory = (committeePath === 'shaleyvyavasthapansamiti' && categorySelect) 
+        ? categorySelect.value 
+        : '';
+    
+    try {
+        if (!currentToken) {
+            alert('कृपया पुन्हा लॉगिन करा (Please login again)');
+            console.error('No authentication token found');
+            return;
+        }
+        
+        const apiUrl = `${API_BASE_URL}/committee-members/committee/${committeePath}/all`;
+        console.log('Making API call to:', apiUrl);
+        console.log('Selected category:', selectedCategory || 'All');
+        console.log('Using token:', currentToken ? 'Token exists' : 'No token');
+        
+        const res = await fetch(apiUrl, {
+            headers: { 
+                'Authorization': `Bearer ${currentToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('Response status:', res.status);
+        
+        let data;
+        try {
+            data = await res.json();
+        } catch (parseError) {
+            console.error('Failed to parse JSON response:', parseError);
+            const text = await res.text();
+            console.error('Response text:', text);
+            alert('API Response Error: Invalid JSON');
+            return;
+        }
+        
+        const tbody = document.getElementById('committeeMembersTableBody');
+        const form = document.getElementById('committeeMemberForm');
+        
+        if (!tbody) {
+            console.error('Table body element not found!');
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        
+        // Filter members by category if category is selected
+        let members = data.data || [];
+        if (selectedCategory && members.length > 0) {
+            members = members.filter(member => 
+                member.category === selectedCategory || 
+                member.categoryMarathi === (selectedCategory === 'Secondary School' ? 'माध्यमिक विद्यालय' : 'प्राथमिक शाळा')
+            );
+            console.log(`Filtered to ${members.length} members for category: ${selectedCategory}`);
+        }
+        
+        // Debug logging
+        console.log('Committee Path:', committeePath);
+        console.log('API URL:', apiUrl);
+        console.log('Response Status:', res.status);
+        console.log('API Response:', JSON.stringify(data, null, 2));
+        
+        if (!res.ok) {
+            console.error('API Error:', res.status, data);
+            const errorMsg = data.message || `HTTP ${res.status}: Failed to load members`;
+            alert('API Error: ' + errorMsg);
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-red-500">त्रुटी: ' + errorMsg + '</td></tr>';
+            if (form) form.classList.remove('hidden');
+            return;
+        }
+        
+        console.log('Data check:', {
+            hasSuccess: !!data.success,
+            hasData: !!data.data,
+            isArray: Array.isArray(data.data),
+            length: data.data?.length || 0
+        });
+        
+        if (data.success && members && Array.isArray(members) && members.length > 0) {
+            console.log(`Displaying ${members.length} members`);
+            members.forEach((member, index) => {
+                console.log(`Member ${index + 1}:`, member.nameMarathi || member.name);
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="border border-gray-200 px-4 py-3 text-center">${member.srNo}</td>
+                    <td class="border border-gray-200 px-4 py-3">${member.nameMarathi || member.name}</td>
+                    <td class="border border-gray-200 px-4 py-3">${member.designationMarathi || member.designation || '-'}</td>
+                    <td class="border border-gray-200 px-4 py-3">
+                        <button data-edit-cm="${member._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs mr-2" style="background: linear-gradient(135deg,#3b82f6 0%, #2563eb 100%);">Edit</button>
+                        <button data-del-cm="${member._id}" class="action-btn px-3 py-1 rounded-md text-white text-xs" style="background: linear-gradient(135deg,#ef4444 0%, #b91c1c 100%);">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Bind edit and delete buttons
+            tbody.querySelectorAll('[data-edit-cm]').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = btn.getAttribute('data-edit-cm');
+                    console.log('Opening edit modal for member:', id);
+                    await openEditCommitteeMemberModal(id);
+                });
+            });
+            
+            tbody.querySelectorAll('[data-del-cm]').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (!confirm('तुम्हाला खात्री आहे की तुम्ही हा सदस्य हटवू इच्छिता?')) return;
+                    
+                    const id = btn.getAttribute('data-del-cm');
+                    console.log('Deleting member:', id);
+                    
+                    try {
+                        const resp = await fetch(`${API_BASE_URL}/committee-members/${id}`, {
+                            method: 'DELETE',
+                            headers: { 
+                                Authorization: `Bearer ${currentToken}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        const result = await resp.json();
+                        console.log('Delete response:', result);
+                        
+                        if (resp.ok && result.success) {
+                            alert('सदस्य यशस्वीरित्या हटवला गेला');
+                            loadCommitteeMembers();
+                        } else {
+                            alert('सदस्य हटवताना त्रुटी आली: ' + (result.message || 'Unknown error'));
+                        }
+                    } catch (e) {
+                        console.error('Delete committee member failed', e);
+                        alert('सदस्य हटवताना त्रुटी आली: ' + e.message);
+                    }
+                });
+            });
+            
+            // Show form
+            if (form) form.classList.remove('hidden');
+        } else {
+            console.warn('No members found or invalid response structure:', data);
+            let message = 'कोणतेही सदस्य नाहीत';
+            if (!data.success) {
+                message = `त्रुटी: ${data.message || 'Unknown error'}`;
+            } else if (!data.data || !Array.isArray(data.data)) {
+                message = 'त्रुटी: Invalid response format';
+            } else if (members.length === 0) {
+                if (selectedCategory) {
+                    message = `निवडलेल्या शाळा प्रकारासाठी कोणतेही सदस्य नाहीत (${selectedCategory === 'Secondary School' ? 'माध्यमिक विद्यालय' : 'प्राथमिक शाळा'})`;
+                } else {
+                    message = 'कोणतेही सदस्य नाहीत';
+                }
+            }
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-gray-500">${message}</td></tr>`;
+            if (form) form.classList.remove('hidden');
+        }
+    } catch (e) {
+        console.error('Load committee members failed', e);
+        console.error('Error details:', e.message, e.stack);
+        alert('समिती सदस्य लोड करताना त्रुटी आली: ' + e.message);
+    }
+}
+
+// Open edit committee member modal
+async function openEditCommitteeMemberModal(memberId) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/committee-members/${memberId}`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        
+        if (!data.success || !data.data) {
+            alert('सदस्य माहिती लोड करताना त्रुटी आली');
+            return;
+        }
+        
+        const member = data.data;
+        
+        // Populate form fields
+        document.getElementById('editCmId').value = member._id;
+        document.getElementById('editCmSrNo').value = member.srNo || '';
+        document.getElementById('editCmName').value = member.name || '';
+        document.getElementById('editCmNameMarathi').value = member.nameMarathi || '';
+        document.getElementById('editCmDesignation').value = member.designation || '';
+        document.getElementById('editCmDesignationMarathi').value = member.designationMarathi || '';
+        document.getElementById('editCmPosition').value = member.position || '';
+        document.getElementById('editCmPositionMarathi').value = member.positionMarathi || '';
+        document.getElementById('editCmAddress').value = member.address || '';
+        document.getElementById('editCmAddressMarathi').value = member.addressMarathi || '';
+        document.getElementById('editCmMobile').value = member.mobile || '';
+        document.getElementById('editCmContact').value = member.contact || '';
+        document.getElementById('editCmTaluka').value = member.taluka || '';
+        document.getElementById('editCmTalukaMarathi').value = member.talukaMarathi || '';
+        document.getElementById('editCmGrampanchayat').value = member.grampanchayat || '';
+        document.getElementById('editCmGrampanchayatMarathi').value = member.grampanchayatMarathi || '';
+        document.getElementById('editCmCategory').value = member.category || '';
+        document.getElementById('editCmCategoryMarathi').value = member.categoryMarathi || '';
+        
+        // Show modal
+        const modal = document.getElementById('editCommitteeMemberModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+    } catch (e) {
+        console.error('Error loading committee member for edit:', e);
+        alert('सदस्य माहिती लोड करताना त्रुटी आली');
+    }
+}
+
+// Close edit committee member modal
+function closeEditCommitteeMemberModal() {
+    const modal = document.getElementById('editCommitteeMemberModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        const form = document.getElementById('editCommitteeMemberForm');
+        if (form) form.reset();
+    }
+}
+
+// Save edited committee member
+async function saveEditCommitteeMember() {
+    try {
+        const memberId = document.getElementById('editCmId').value;
+        if (!memberId) {
+            alert('सदस्य ID आढळले नाही');
+            return;
+        }
+        
+        // Get current committee path
+        const committeePath = currentCommitteePath || document.getElementById('committeeSelect').value;
+        if (!committeePath) {
+            alert('समिती निवडलेली नाही');
+            return;
+        }
+        
+        // Build update data object, only including fields that have values
+        const updateData = {};
+        const srNo = document.getElementById('editCmSrNo').value;
+        if (srNo) updateData.srNo = parseInt(srNo);
+        
+        const name = document.getElementById('editCmName').value.trim();
+        if (name) updateData.name = name;
+        
+        const nameMarathi = document.getElementById('editCmNameMarathi').value.trim();
+        if (nameMarathi) updateData.nameMarathi = nameMarathi;
+        
+        const designation = document.getElementById('editCmDesignation').value.trim();
+        if (designation) updateData.designation = designation;
+        
+        const designationMarathi = document.getElementById('editCmDesignationMarathi').value.trim();
+        if (designationMarathi) updateData.designationMarathi = designationMarathi;
+        
+        const position = document.getElementById('editCmPosition').value.trim();
+        if (position) updateData.position = position;
+        
+        const positionMarathi = document.getElementById('editCmPositionMarathi').value.trim();
+        if (positionMarathi) updateData.positionMarathi = positionMarathi;
+        
+        const address = document.getElementById('editCmAddress').value.trim();
+        if (address) updateData.address = address;
+        
+        const addressMarathi = document.getElementById('editCmAddressMarathi').value.trim();
+        if (addressMarathi) updateData.addressMarathi = addressMarathi;
+        
+        const mobile = document.getElementById('editCmMobile').value.trim();
+        if (mobile) updateData.mobile = mobile;
+        
+        const contact = document.getElementById('editCmContact').value.trim();
+        if (contact) updateData.contact = contact;
+        
+        const taluka = document.getElementById('editCmTaluka').value.trim();
+        if (taluka) updateData.taluka = taluka;
+        
+        const talukaMarathi = document.getElementById('editCmTalukaMarathi').value.trim();
+        if (talukaMarathi) updateData.talukaMarathi = talukaMarathi;
+        
+        const grampanchayat = document.getElementById('editCmGrampanchayat').value.trim();
+        if (grampanchayat) updateData.grampanchayat = grampanchayat;
+        
+        const grampanchayatMarathi = document.getElementById('editCmGrampanchayatMarathi').value.trim();
+        if (grampanchayatMarathi) updateData.grampanchayatMarathi = grampanchayatMarathi;
+        
+        const category = document.getElementById('editCmCategory').value.trim();
+        if (category) updateData.category = category;
+        
+        const categoryMarathi = document.getElementById('editCmCategoryMarathi').value.trim();
+        if (categoryMarathi) updateData.categoryMarathi = categoryMarathi;
+        
+        console.log('Updating member:', memberId, 'with data:', updateData);
+        
+        const resp = await fetch(`${API_BASE_URL}/committee-members/${memberId}`, {
+            method: 'PUT',
+            headers: { 
+                Authorization: `Bearer ${currentToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+        
+        const data = await resp.json();
+        console.log('Update response:', data);
+        
+        if (!resp.ok || !data.success) {
+            alert(data.message || 'सदस्य अपडेट करताना त्रुटी आली');
+            return;
+        }
+        
+        alert('सदस्य यशस्वीरित्या अपडेट केला गेला!');
+        closeEditCommitteeMemberModal();
+        loadCommitteeMembers();
+    } catch (e) {
+        console.error('Error updating committee member:', e);
+        alert('सदस्य अपडेट करताना त्रुटी आली: ' + e.message);
+    }
+}
+
 // Show login page
 function showLoginPage() {
-    document.getElementById('loginPage').classList.remove('hidden');
-    document.getElementById('adminPanel').classList.add('hidden');
+    const loginPage = document.getElementById('loginPage');
+    const adminPanel = document.getElementById('adminPanel');
+    
+    if (loginPage) {
+        loginPage.classList.remove('hidden');
+        loginPage.style.display = 'flex';
+    }
+    if (adminPanel) {
+        adminPanel.classList.add('hidden');
+        adminPanel.style.display = 'none';
+    }
+    console.log('Login page shown');
 }
 
 // Show admin panel
 function showAdminPanel() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
+    const loginPage = document.getElementById('loginPage');
+    const adminPanel = document.getElementById('adminPanel');
+    
+    if (loginPage) {
+        loginPage.classList.add('hidden');
+        loginPage.style.display = 'none';
+    }
+    if (adminPanel) {
+        adminPanel.classList.remove('hidden');
+        adminPanel.style.display = 'block';
+    }
+    console.log('Admin panel shown');
 }
 
 // Toggle sidebar
@@ -301,8 +1786,12 @@ function navigateToSection(section) {
         'daridrya-resha-dakhla': 'दारिद्र्य रेषा दाखला',
         'rahivashi-dakhla': 'रहिवाशी दाखला',
         'takrar-suchana': 'तक्रार सूचना',
+        'banners': 'बॅनर व्यवस्थापन',
         'gallery': 'गॅलेरी व्यवस्थापन',
-        'events': 'उपक्रम व्यवस्थापन'
+        'events': 'उपक्रम व्यवस्थापन',
+        'members': 'मुख्य सदस्य व्यवस्थापन',
+        'committees': 'समिती व्यवस्थापन',
+        'committeeMembers': 'समितीचे सदस्य व्यवस्थापन'
     };
     pageTitle.textContent = titles[section] || section;
     
@@ -325,10 +1814,18 @@ function navigateToSection(section) {
     document.getElementById('dashboardContent').classList.add('hidden');
     document.getElementById('allSubmissionsContent').classList.add('hidden');
     document.getElementById('formSectionContent').classList.add('hidden');
+    const bannersContent = document.getElementById('bannersContent');
     const galleryContent = document.getElementById('galleryContent');
     const eventsContent = document.getElementById('eventsContent');
+    const membersContent = document.getElementById('membersContent');
+    const committeesContent = document.getElementById('committeesContent');
+    const committeeMembersContent = document.getElementById('committeeMembersContent');
+    if (bannersContent) bannersContent.classList.add('hidden');
     if (galleryContent) galleryContent.classList.add('hidden');
     if (eventsContent) eventsContent.classList.add('hidden');
+    if (membersContent) membersContent.classList.add('hidden');
+    if (committeesContent) committeesContent.classList.add('hidden');
+    if (committeeMembersContent) committeeMembersContent.classList.add('hidden');
     
     currentSection = section;
     
@@ -339,12 +1836,23 @@ function navigateToSection(section) {
     } else if (section === 'all-submissions') {
         document.getElementById('allSubmissionsContent').classList.remove('hidden');
         loadSubmissions();
+    } else if (section === 'banners') {
+        document.getElementById('bannersContent').classList.remove('hidden');
+        loadBanners();
     } else if (section === 'gallery') {
         document.getElementById('galleryContent').classList.remove('hidden');
         loadGallery();
     } else if (section === 'events') {
         document.getElementById('eventsContent').classList.remove('hidden');
         loadEvents();
+    } else if (section === 'members') {
+        document.getElementById('membersContent').classList.remove('hidden');
+        loadMembers();
+    } else if (section === 'committees') {
+        document.getElementById('committeesContent').classList.remove('hidden');
+        loadCommittees();
+    } else if (section === 'committeeMembers') {
+        document.getElementById('committeeMembersContent').classList.remove('hidden');
     } else {
         // Form section
         document.getElementById('formSectionContent').classList.remove('hidden');
@@ -373,10 +1881,20 @@ async function handleLogin(e) {
         const data = await response.json();
         
         if (data.success) {
-            currentToken = data.data.token;
-            localStorage.setItem('adminToken', currentToken);
+            // Handle both response formats: data.data.token or data.token
+            const token = data.data?.token || data.token || data.data;
+            if (!token) {
+                throw new Error('Token not received from server');
+            }
             
-            document.getElementById('adminEmail').textContent = data.data.user.email;
+            currentToken = token;
+            localStorage.setItem('adminToken', currentToken);
+            console.log('Token saved to localStorage');
+            
+            const userEmail = data.data?.user?.email || data.user?.email || email;
+            if (document.getElementById('adminEmail')) {
+                document.getElementById('adminEmail').textContent = userEmail;
+            }
             
             showAdminPanel();
             loadStats();

@@ -1,11 +1,15 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function RastaArakhaSamitiPage() {
   const { t, language } = useLanguage();
-  
+  const [committeeMembers, setCommitteeMembers] = useState([]);
 
-  // Committee members data
-  const committeeMembers = [
+  // Fetch committee members from API
+  useEffect(() => {
+    // Static committee members data (fallback)
+    const staticMembers = [
     {
       srNo: 1,
       name: language === 'mr' ? "सौ. योगिता भोये" : "Smt. Yogita Bhoye",
@@ -77,6 +81,38 @@ export default function RastaArakhaSamitiPage() {
       mobile: "9850493951"
     }
   ];
+
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/rastaarakhasamiti`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const dynamicMembers = result.data.map(member => ({
+              srNo: member.srNo,
+              name: language === 'mr' ? member.nameMarathi : member.name,
+              position: language === 'mr' ? member.positionMarathi : member.position,
+              designation: language === 'mr' ? member.designationMarathi : member.designation,
+              mobile: member.mobile || member.contact || ''
+            }));
+            
+            // Use API members (they now include the static members from database)
+            setCommitteeMembers(dynamicMembers);
+            return;
+          }
+        }
+        // Fallback to static members
+        setCommitteeMembers(staticMembers);
+      } catch (error) {
+        console.warn('Failed to fetch committee members from API, using static data:', error);
+        // Fallback to static members
+        setCommitteeMembers(staticMembers);
+      }
+    };
+
+    fetchMembers();
+  }, [language]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 pt-20">

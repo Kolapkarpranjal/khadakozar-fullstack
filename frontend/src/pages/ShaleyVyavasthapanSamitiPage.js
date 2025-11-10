@@ -1,11 +1,16 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function ShaleyVyavasthapanSamitiPage() {
   const { t, language } = useLanguage();
-  
+  const [secondarySchoolMembers, setSecondarySchoolMembers] = useState([]);
+  const [primarySchoolMembers, setPrimarySchoolMembers] = useState([]);
 
-  // Committee members data for Secondary School
-  const secondarySchoolMembers = [
+  // Fetch committee members from API
+  useEffect(() => {
+    // Static committee members data for Secondary School (fallback)
+    const staticSecondaryMembers = [
     {
       srNo: 1,
       name: language === 'mr' ? "श्री. रवींद्र रामनाथ पगार" : "Shri. Ravindra Ramnath Pagar",
@@ -98,8 +103,8 @@ export default function ShaleyVyavasthapanSamitiPage() {
     }
   ];
 
-  // Committee members data for Primary School
-  const primarySchoolMembers = [
+    // Static committee members data for Primary School (fallback)
+    const staticPrimaryMembers = [
     {
       srNo: 1,
       name: language === 'mr' ? "श्री. बापू रामभाऊ पगार" : "Shri. Bapu Rambahau Pagar",
@@ -176,6 +181,50 @@ export default function ShaleyVyavasthapanSamitiPage() {
       designation: language === 'mr' ? "सदस्य सचिव" : "Member Secretary"
     }
   ];
+
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/shaleyvyavasthapansamiti`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data and separate by category (Secondary/Primary School)
+            const dynamicSecondaryMembers = result.data
+              .filter(member => member.category === 'Secondary School' || member.categoryMarathi === 'माध्यमिक विद्यालय')
+              .map(member => ({
+                srNo: member.srNo,
+                name: language === 'mr' ? member.nameMarathi : member.name,
+                designation: language === 'mr' ? member.designationMarathi : member.designation
+              }));
+            
+            const dynamicPrimaryMembers = result.data
+              .filter(member => member.category === 'Primary School' || member.categoryMarathi === 'प्राथमिक शाळा')
+              .map(member => ({
+                srNo: member.srNo,
+                name: language === 'mr' ? member.nameMarathi : member.name,
+                designation: language === 'mr' ? member.designationMarathi : member.designation
+              }));
+            
+            // Use API members (they now include the static members from database)
+            // Merge with static as fallback for any missing members
+            setSecondarySchoolMembers(dynamicSecondaryMembers.length > 0 ? dynamicSecondaryMembers : staticSecondaryMembers);
+            setPrimarySchoolMembers(dynamicPrimaryMembers.length > 0 ? dynamicPrimaryMembers : staticPrimaryMembers);
+            return;
+          }
+        }
+        // Fallback to static members
+        setSecondarySchoolMembers(staticSecondaryMembers);
+        setPrimarySchoolMembers(staticPrimaryMembers);
+      } catch (error) {
+        console.warn('Failed to fetch committee members from API, using static data:', error);
+        // Fallback to static members
+        setSecondarySchoolMembers(staticSecondaryMembers);
+        setPrimarySchoolMembers(staticPrimaryMembers);
+      }
+    };
+
+    fetchMembers();
+  }, [language]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 pt-16 md:pt-20">

@@ -1,10 +1,15 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function GramSansadhanGatPage() {
   const { t, language } = useLanguage();
+  const [committeeMembers, setCommitteeMembers] = useState([]);
 
-  // Committee members data for Gram Sansadhan Gat
-  const committeeMembers = [
+  // Fetch committee members from API
+  useEffect(() => {
+    // Static committee members data (fallback)
+    const staticMembers = [
     {
       srNo: 1,
       taluka: language === 'mr' ? "चांदवड" : "Chandwad",
@@ -276,6 +281,40 @@ export default function GramSansadhanGatPage() {
       contact: "८७२६२४०२६४"
     }
   ];
+
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch(`${API_URL.COMMITTEE_MEMBERS}/committee/gramsansadhangat`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const dynamicMembers = result.data.map(member => ({
+              srNo: member.srNo,
+              taluka: language === 'mr' ? member.talukaMarathi : member.taluka,
+              grampanchayat: language === 'mr' ? member.grampanchayatMarathi : member.grampanchayat,
+              name: language === 'mr' ? member.nameMarathi : member.name,
+              designation: language === 'mr' ? member.designationMarathi : member.designation,
+              category: language === 'mr' ? member.categoryMarathi : member.category,
+              contact: member.contact || member.mobile || ''
+            }));
+            
+            // Use API members (they now include the static members from database)
+            setCommitteeMembers(dynamicMembers);
+            return;
+          }
+        }
+        // Fallback to static members
+        setCommitteeMembers(staticMembers);
+      } catch (error) {
+        console.warn('Failed to fetch committee members from API, using static data:', error);
+        // Fallback to static members
+        setCommitteeMembers(staticMembers);
+      }
+    };
+
+    fetchMembers();
+  }, [language]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 pt-16 md:pt-20">

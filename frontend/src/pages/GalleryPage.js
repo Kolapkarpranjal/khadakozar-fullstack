@@ -17,114 +17,40 @@ export default function GalleryPage() {
             const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
             const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
             const alt = language === 'mr' ? (item.altTextMr || item.altText || title || 'Gallery image') : (item.altTextEn || item.altText || title || 'Gallery image');
+            const src = `${API_URL.BASE}${item.imageUrl}`;
+            const isVideo = item.isVideo || false;
+            
+            // Log video items for debugging
+            if (isVideo) {
+              console.log('Video item:', {
+                title,
+                src,
+                imageUrl: item.imageUrl,
+                isVideo: item.isVideo
+              });
+            }
+            
             return {
-            src: `${API_URL.BASE}${item.imageUrl}`,
+              _id: item._id,
+              src,
               alt,
               title,
-              description: desc
+              description: desc,
+              video: isVideo
             };
           });
           setDynamicImages(mapped);
         }
       } catch (e) {
-        // Fail silently; static images will still show
-        console.warn('Failed to load dynamic gallery', e);
+        // Fail silently
+        console.warn('Failed to load gallery from API', e);
       }
     })();
     return () => { isMounted = false; };
-  }, []);
+  }, [language]);
 
-  const galleryImages = [
-    {
-      src: "/images/gallery/gallery1.jpg",
-      alt: "रस्त्याचे काम पूर्ण",
-      description: "रस्त्याचे काम पूर्ण"
-    },
-    {
-      src: "/images/gallery/gallery2.jpg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery3.jpg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery4.jpg",
-      alt: "केद्राई माता मंदिर सोलार बसविणे",
-      description: "केद्राई माता मंदिर सोलार बसविणे"
-    },
-    {
-      src: "/images/gallery/gallery5.jpg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery6.jpg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery7.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery8.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery9.jpg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery10.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery11.jpeg",
-      alt: "आई माउली मंदिर नवीन शेड",
-      description: "आई माउली मंदिर नवीन शेड"
-    },
-    {
-      src: "/images/gallery/gallery12.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery13.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery14.jpeg",
-      alt: "ग्रामपंचायत खडक ओझरची छायाचित्रे",
-      description: "ग्रामपंचायत खडक ओझरची छायाचित्रे"
-    },
-    {
-      src: "/images/gallery/gallery15.jpeg",
-      alt: "सभामंडप",
-      description: "सभामंडप"
-    },
-    {
-      src: "/images/gallery/gallery16.jpeg",
-      alt: "केद्राई माता मंदिर सोलार बसविणे",
-      description: "केद्राई माता मंदिर सोलार बसविणे"
-    },
-    {
-      video: true,
-      src: "/images/gallery/shubharambhvdo.mp4",
-      alt: "मुख्यमंत्री समृध्द पंचायतराज अभियान शुभारंभ",
-      title: "मुख्यमंत्री समृध्द पंचायतराज अभियान शुभारंभ",
-      description: "मुख्यमंत्री समृध्द पंचायतराज अभियान शुभारंभ"
-    }
-  ];
-
-  const allImages = [...dynamicImages, ...galleryImages];
+  // Use only API data - no static images
+  const allImages = dynamicImages;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 md:py-12">
@@ -134,14 +60,41 @@ export default function GalleryPage() {
         </h1>
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {allImages.map((image, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                {image.video ? (
+            {allImages.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-600">कोणतेही गॅलेरी आयटम उपलब्ध नाहीत</p>
+                <p className="text-gray-500 text-sm mt-2">No gallery items available</p>
+              </div>
+            ) : (
+              allImages.map((image, index) => {
+                // Determine video MIME type from file extension
+                const getVideoType = (src) => {
+                  if (src.endsWith('.mp4')) return 'video/mp4';
+                  if (src.endsWith('.webm')) return 'video/webm';
+                  if (src.endsWith('.ogg') || src.endsWith('.ogv')) return 'video/ogg';
+                  if (src.endsWith('.mov')) return 'video/quicktime';
+                  if (src.endsWith('.avi')) return 'video/x-msvideo';
+                  return 'video/mp4'; // default
+                };
+
+                return (
+                <div key={image._id || index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  {image.video ? (
                   <video
                     controls
                     className="w-full h-48 sm:h-56 lg:h-64 object-cover"
+                    preload="metadata"
+                    onError={(e) => {
+                      console.error('Failed to load video:', image.src);
+                      console.error('Video error:', e);
+                    }}
+                    onLoadStart={() => {
+                      console.log('Loading video:', image.src);
+                    }}
                   >
+                    <source src={image.src} type={getVideoType(image.src)} />
                     <source src={image.src} type="video/mp4" />
+                    <source src={image.src} type="video/webm" />
                     Your browser does not support the video tag.
                   </video>
                 ) : (
@@ -163,7 +116,9 @@ export default function GalleryPage() {
                   <p className="text-gray-600 text-sm">{image.description}</p>
                 </div>
               </div>
-            ))}
+              );
+              })
+            )}
           </div>
         </div>
       </div>

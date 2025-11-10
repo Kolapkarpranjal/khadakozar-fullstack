@@ -9,65 +9,6 @@ export default function UpakaramPage() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  // Static events data
-  const staticEvents = [
-    {
-      _id: 1,
-      title: language === 'mr' ? 'अम्बुलंस' : 'Ambulance',
-      description: language === 'mr'
-        ? 'ग्रामस्थांना आपत्कालीन वैद्यकीय सेवा उपलब्ध करून देण्यासाठी अम्बुलंसची सुविधा. आरोग्य सेवांच्या सुलभतेसाठी महत्त्वपूर्ण योगदान.'
-        : 'Ambulance facility to provide emergency medical services to villagers. Important contribution for accessibility of healthcare services.',
-      imageUrl: '/images/upakaram/event2.jpg',
-      altText: language === 'mr' ? 'अम्बुलंस' : 'Ambulance',
-      status: 'Completed',
-      date: '2024'
-    },
-    {
-      _id: 2,
-      title: language === 'mr' ? 'अम्बुलंस' : 'Ambulance',
-      description: language === 'mr'
-        ? 'ग्रामस्थांना आपत्कालीन वैद्यकीय सेवा उपलब्ध करून देण्यासाठी अम्बुलंसची सुविधा. आरोग्य सेवांच्या सुलभतेसाठी महत्त्वपूर्ण योगदान.'
-        : 'Ambulance facility to provide emergency medical services to villagers. Important contribution for accessibility of healthcare services.',
-      imageUrl: '/images/upakaram/event3.jpg',
-      altText: language === 'mr' ? 'अम्बुलंस' : 'Ambulance',
-      status: 'Completed',
-      date: '2024'
-    },
-    {
-      _id: 3,
-      title: language === 'mr' ? 'वैकुंठ रथ' : 'Vaikunth Rath',
-      description: language === 'mr'
-        ? 'वैकुंठ रथ हा एक महत्त्वपूर्ण धार्मिक आणि सांस्कृतिक कार्यक्रम आहे. हा रथ गावातील सर्व भाविकांसाठी आध्यात्मिक आनंद आणि शांती आणतो. वैकुंठ रथाच्या माध्यमातून गावातील लोकांची धार्मिक भावना जागृत होते आणि सामुदायिक एकता मजबूत होते. हा कार्यक्रम गावाच्या सांस्कृतिक वारसाचा एक महत्त्वपूर्ण भाग आहे. वैकुंठ रथाच्या आयोजनामुळे गावातील सर्व वयोगटातील लोक एकत्र येतात आणि सामूहिक प्रार्थना करतात. या कार्यक्रमाच्या माध्यमातून गावातील लोकांच्या मध्ये आध्यात्मिक जागृती निर्माण होते. वैकुंठ रथ हा केवळ धार्मिक कार्यक्रम नसून तो गावाच्या सामाजिक एकतेचे प्रतीक आहे. या कार्यक्रमामुळे गावातील लोकांच्या मध्ये परस्पर प्रेम आणि सहकार्याची भावना वाढते. वैकुंठ रथाच्या आयोजनामुळे गावाची धार्मिक आणि सांस्कृतिक ओळख मजबूत होते.'
-        : 'Vaikunth Rath is an important religious and cultural program. This rath brings spiritual joy and peace to all devotees in the village. Through Vaikunth Rath, the religious sentiments of the villagers are awakened and community unity is strengthened. This program is an important part of the village cultural heritage. The organization of Vaikunth Rath brings together people of all age groups in the village for collective prayers. Through this program, spiritual awakening is created among the villagers. Vaikunth Rath is not just a religious program but a symbol of social unity of the village. This program increases the feeling of mutual love and cooperation among the villagers. The organization of Vaikunth Rath strengthens the religious and cultural identity of the village.',
-      imageUrl: '/images/upakaram/event4.jpg',
-      altText: language === 'mr' ? 'वैकुंठ रथ' : 'Vaikunth Rath',
-      status: 'Ongoing',
-      date: '2024'
-    },
-    {
-      _id: 4,
-      title: language === 'mr' ? 'पिण्याच्या पाण्याचा टँकर' : 'Drinking Water Tanker',
-      description: language === 'mr'
-        ? 'सततच्या दुष्काळामुळे पिण्याच्या पाण्याची टंचाई निर्माण होते. यावर उपाय म्हणून, ग्रामपंचायतने टँकर खरेदी केला.'
-        : 'Continuous drought creates shortage of drinking water. As a solution, the Gram Panchayat purchased a tanker.',
-      imageUrl: '/images/upakaram/event5.jpg',
-      altText: language === 'mr' ? 'पिण्याच्या पाण्याचा टँकर' : 'Drinking Water Tanker',
-      status: 'Completed',
-      date: '2024'
-    },
-    {
-      _id: 5,
-      title: language === 'mr' ? 'शेड उभारणी' : 'Shed Construction',
-      description: language === 'mr'
-        ? 'अम्बुलंस व वैकुंठ रथ साठी स्वतंत्र शेड उभारणी केली.'
-        : 'Separate shed construction for ambulance and Vaikunth Rath.',
-      imageUrl: '/images/upakaram/event6.jpg',
-      altText: language === 'mr' ? 'शेड उभारणी' : 'Shed Construction',
-      status: 'Completed',
-      date: '2024'
-    }
-  ];
-
   useEffect(() => {
     let isMounted = true;
 
@@ -75,29 +16,30 @@ export default function UpakaramPage() {
       try {
         const res = await fetch(`${API_URL.BASE}/api/events`);
         const data = await res.json();
-        const dynamic = Array.isArray(data?.data) ? data.data.map(item => {
-          const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
-          const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
-          const alt = language === 'mr' ? (item.altTextMr || item.altText || title) : (item.altTextEn || item.altText || title);
-          return {
-            _id: item._id,
-            title,
-            description: desc,
-            imageUrl: `${API_URL.BASE}${item.imageUrl}`,
-            altText: alt,
-            status: item.status || 'Completed',
-            date: item.date || ''
-          };
-        }) : [];
-        if (isMounted) {
-          setEvents([...dynamic, ...staticEvents]);
+        if (isMounted && data && data.success) {
+          const mapped = (data.data || []).map(item => {
+            const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
+            const desc = language === 'mr' ? (item.descriptionMr || item.description || title) : (item.descriptionEn || item.description || title);
+            const alt = language === 'mr' ? (item.altTextMr || item.altText || title) : (item.altTextEn || item.altText || title);
+            return {
+              _id: item._id,
+              title,
+              description: desc,
+              imageUrl: `${API_URL.BASE}${item.imageUrl}`,
+              altText: alt,
+              status: item.status || 'Completed',
+              date: item.date || ''
+            };
+          });
+          setEvents(mapped);
           setLoading(false);
         }
       } catch (e) {
-        // If API fails, show static ones so page still renders
+        // Fail silently
+        console.warn('Failed to load events from API', e);
         if (isMounted) {
-      setEvents(staticEvents);
-      setLoading(false);
+          setEvents([]);
+          setLoading(false);
         }
       }
     })();

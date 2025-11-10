@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "../utils/config";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSamitiOpen, setIsSamitiOpen] = useState(false);
+  const [samitiSubItems, setSamitiSubItems] = useState([]);
   const { language, changeLanguage, t } = useLanguage();
 
   const toggleMenu = () => {
@@ -28,32 +30,45 @@ export default function Navigation() {
     { path: "/puraskar", key: "puraskar" }
   ];
 
-  const samitiSubItems = [
-    { 
-      path: "/samiti/janArogyaSamiti", 
-      label: language === 'mr' ? "जन आरोग्य समिती" : "Jan Arogya Samiti" 
-    },
-    { 
-      path: "/samiti/KrishiVikasSamiti", 
-      label: language === 'mr' ? "कृषी विकास समिती" : "Krishi Vikas Samiti" 
-    },
-    { 
-      path: "/samiti/ShaleyVyavasthapanSamiti", 
-      label: language === 'mr' ? "शालेय व्यवस्थापन समिती" : "Shaley Vyavasthapan Samiti" 
-    },
-    { 
-      path: "/samiti/RastaArakhaSamiti", 
-      label: language === 'mr' ? "रस्ता आराखडा समिती" : "Rasta Arakha Samiti" 
-    },
-    { 
-      path: "/samiti/MahimAhilyadeviLokSanchalitSadhanKendra", 
-      label: language === 'mr' ? "माहीम अहिल्यादेवी लोक संचलित साधन केंद्र" : "Mahim Ahilyadevi Lok Sanchalit Sadhan Kendra" 
-    },
-    { 
-      path: "/samiti/GramSansadhanGat", 
-      label: language === 'mr' ? "ग्रामसंसाधन गट" : "Gram Sansadhan Gat" 
-    }
-  ];
+  // Fetch committees from API
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchCommittees = async () => {
+      try {
+        const response = await fetch(API_URL.COMMITTEES);
+        if (isMounted && response.ok) {
+          const result = await response.json();
+          if (result.success && result.data && result.data.length > 0) {
+            // Transform API data to match component format
+            const dynamicCommittees = result.data
+              .filter(committee => committee.isActive !== false) // Only show active committees
+              .map(committee => ({
+                path: committee.route || `/samiti/${committee.path}`,
+                label: language === 'mr' ? (committee.titleMarathi || committee.title) : (committee.title || committee.titleMarathi)
+              }));
+            
+            // Use only dynamic committees from API
+            setSamitiSubItems(dynamicCommittees);
+            return;
+          }
+        }
+        // If API fails or returns no data, show empty array
+        if (isMounted) {
+          setSamitiSubItems([]);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch committees from API:', error);
+        // Fail silently - show empty array instead of static data
+        if (isMounted) {
+          setSamitiSubItems([]);
+        }
+      }
+    };
+
+    fetchCommittees();
+    return () => { isMounted = false; };
+  }, [language]);
 
 
   return (
