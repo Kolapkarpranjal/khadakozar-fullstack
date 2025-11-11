@@ -106,50 +106,59 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Configure multer with different limits for videos
+// Configure multer with different limits for videos and large images
 const getFileSizeLimit = (req) => {
-  // Check if this is a gallery or events upload (allow larger files for videos)
-  const isGalleryOrEvents = req.originalUrl && (
+  // Check if this is a gallery, events, or banners upload (allow larger files)
+  const isLargeFileUpload = req.originalUrl && (
     req.originalUrl.includes('/api/gallery') || 
-    req.originalUrl.includes('/api/events')
+    req.originalUrl.includes('/api/events') ||
+    req.originalUrl.includes('/api/banners')
   );
   
-  // For gallery/events, allow larger files (videos can be big)
-  if (isGalleryOrEvents) {
-    return parseInt(process.env.MAX_VIDEO_SIZE) || 200 * 1024 * 1024; // 200MB for videos
+  // For gallery/events/banners, allow larger files (videos and high-res images can be big)
+  // Note: Railway has a 100MB request body limit
+  if (isLargeFileUpload) {
+    return parseInt(process.env.MAX_VIDEO_SIZE) || 100 * 1024 * 1024; // 100MB for videos/large images (Railway limit)
   }
   
   // For other uploads (images, documents), use smaller limit
   return parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024; // 10MB for images/documents
 };
 
-// Configure multer
+// Configure multer - set high limit for all uploads (100MB default, Railway limit)
+// This allows large images for banners and videos for gallery/events
+// Note: Railway has a 100MB request body limit, so we use 100MB max
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 200 * 1024 * 1024, // 200MB default (will be overridden by dynamic limit)
+    fileSize: parseInt(process.env.MAX_VIDEO_SIZE) || 100 * 1024 * 1024, // 100MB for large files (Railway limit)
     files: 10 // Maximum 10 files per request
   }
 });
 
 // Error handling middleware
 const handleUploadError = (error, req, res, next) => {
+  console.error('Upload error:', error);
+  console.error('Request URL:', req.originalUrl);
+  console.error('Error code:', error.code);
+  
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       // Determine the actual limit based on route
-      const isGalleryOrEvents = req.originalUrl && (
+      const isLargeFileUpload = req.originalUrl && (
         req.originalUrl.includes('/api/gallery') || 
-        req.originalUrl.includes('/api/events')
+        req.originalUrl.includes('/api/events') ||
+        req.originalUrl.includes('/api/banners')
       );
       
-      const maxSize = isGalleryOrEvents 
-        ? (parseInt(process.env.MAX_VIDEO_SIZE) || 200 * 1024 * 1024) / (1024 * 1024)
+      const maxSize = isLargeFileUpload 
+        ? (parseInt(process.env.MAX_VIDEO_SIZE) || 100 * 1024 * 1024) / (1024 * 1024)
         : (parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024) / (1024 * 1024);
       
       return res.status(400).json({
         success: false,
-        message: `File too large. Maximum size is ${maxSize}MB.`
+        message: `File too large. Maximum size is ${maxSize}MB. Please compress your image or use a smaller file.`
       });
     }
     if (error.code === 'LIMIT_FILE_COUNT') {

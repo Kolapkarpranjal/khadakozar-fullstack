@@ -50,8 +50,9 @@ app.use(cors({
 }));
 
 // Body parsing middleware - increased limit for file uploads
-app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ extended: true, limit: '200mb' }));
+// Note: Railway has a 100MB request body limit, so we use 100MB
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -153,10 +154,15 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   console.log(`🔗 API URL: http://localhost:${PORT}/api`);
 });
+
+// Set timeout for large file uploads (5 minutes)
+server.timeout = 5 * 60 * 1000; // 5 minutes
+server.keepAliveTimeout = 5 * 60 * 1000; // 5 minutes
+server.headersTimeout = 5 * 60 * 1000; // 5 minutes
 
 module.exports = app;

@@ -438,14 +438,27 @@ function bindManagementForms() {
                 fd.append('image', file);
                 fd.append('uploadTarget', 'banners');
                 try {
+                    console.log('Uploading banner, file size:', file ? (file.size / 1024 / 1024).toFixed(2) + ' MB' : 'No file');
                     const res = await fetch(`${API_BASE_URL}/banners`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${currentToken}` },
                         body: fd
                     });
-                    const data = await res.json();
+                    
+                    let data;
+                    try {
+                        data = await res.json();
+                    } catch (jsonError) {
+                        console.error('Failed to parse response as JSON:', jsonError);
+                        const text = await res.text();
+                        console.error('Response text:', text);
+                        alert(`त्रुटी: सर्व्हरकडून अवैध प्रतिसाद. Status: ${res.status}. कृपया कन्सोल तपासा.`);
+                        return;
+                    }
+                    
                     if (!res.ok || !data.success) {
-                        alert(data.message || 'बॅनर जतन करण्यात अडचण आली');
+                        console.error('Banner upload failed:', data);
+                        alert(data.message || `बॅनर जतन करण्यात अडचण आली (Status: ${res.status})`);
                         return;
                     }
                     alert('बॅनर यशस्वीरित्या जोडला गेला!');
@@ -453,7 +466,7 @@ function bindManagementForms() {
                     bannerForm.reset();
                 } catch (error) {
                     console.error('Error adding banner:', error);
-                    alert('बॅनर जोडताना त्रुटी आली');
+                    alert(`बॅनर जोडताना त्रुटी आली: ${error.message || 'अज्ञात त्रुटी'}`);
                 }
             }
         });
@@ -477,14 +490,27 @@ function bindManagementForms() {
             fd.append('uploadTarget', 'gallery');
             
             try {
+                console.log('Uploading gallery item, file size:', file ? (file.size / 1024 / 1024).toFixed(2) + ' MB' : 'No file');
                 const res = await fetch(`${API_BASE_URL}/gallery`, {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${currentToken}` },
                     body: fd
                 });
-                const data = await res.json();
+                
+                let data;
+                try {
+                    data = await res.json();
+                } catch (jsonError) {
+                    console.error('Failed to parse response as JSON:', jsonError);
+                    const text = await res.text();
+                    console.error('Response text:', text);
+                    alert(`त्रुटी: सर्व्हरकडून अवैध प्रतिसाद. Status: ${res.status}. कृपया कन्सोल तपासा.`);
+                    return;
+                }
+                
                 if (!res.ok || !data.success) {
-                    alert(data.message || 'प्रतिमा/व्हिडिओ जोडताना त्रुटी आली');
+                    console.error('Gallery upload failed:', data);
+                    alert(data.message || `प्रतिमा/व्हिडिओ जोडताना त्रुटी आली (Status: ${res.status})`);
                     return;
                 }
                 alert('प्रतिमा/व्हिडिओ यशस्वीरित्या जोडले गेले!');
@@ -492,7 +518,7 @@ function bindManagementForms() {
                 galleryForm.reset();
             } catch (error) {
                 console.error('Error uploading gallery item:', error);
-                alert('प्रतिमा/व्हिडिओ जोडताना त्रुटी आली');
+                alert(`प्रतिमा/व्हिडिओ जोडताना त्रुटी आली: ${error.message || 'अज्ञात त्रुटी'}`);
             }
         });
     }
@@ -555,22 +581,35 @@ function bindManagementForms() {
                 fd.append('image', file);
                 fd.append('uploadTarget', 'events');
                 try {
-            const resp = await fetch(`${API_BASE_URL}/events`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${currentToken}` },
-                body: fd
-            });
-                const data = await resp.json();
-                if (!resp.ok || !data.success) {
-                        alert(data.message || 'उपक्रम जतन करण्यात अडचण आली');
-                    return;
-                }
+                    console.log('Uploading event, file size:', file ? (file.size / 1024 / 1024).toFixed(2) + ' MB' : 'No file');
+                    const resp = await fetch(`${API_BASE_URL}/events`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${currentToken}` },
+                        body: fd
+                    });
+                    
+                    let data;
+                    try {
+                        data = await resp.json();
+                    } catch (jsonError) {
+                        console.error('Failed to parse response as JSON:', jsonError);
+                        const text = await resp.text();
+                        console.error('Response text:', text);
+                        alert(`त्रुटी: सर्व्हरकडून अवैध प्रतिसाद. Status: ${resp.status}. कृपया कन्सोल तपासा.`);
+                        return;
+                    }
+                    
+                    if (!resp.ok || !data.success) {
+                        console.error('Event upload failed:', data);
+                        alert(data.message || `उपक्रम जतन करण्यात अडचण आली (Status: ${resp.status})`);
+                        return;
+                    }
                     alert('उपक्रम यशस्वीरित्या जोडला गेला!');
-            await loadEvents();
-            eventForm.reset();
+                    await loadEvents();
+                    eventForm.reset();
                 } catch (error) {
                     console.error('Error adding event:', error);
-                    alert('उपक्रम जोडताना त्रुटी आली');
+                    alert(`उपक्रम जोडताना त्रुटी आली: ${error.message || 'अज्ञात त्रुटी'}`);
                 }
             }
         });
