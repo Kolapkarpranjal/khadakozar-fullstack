@@ -19,8 +19,25 @@ export default function BannerSlider() {
     let isMounted = true;
     (async () => {
       try {
-        const res = await fetch(`${API_URL.BASE}/api/banners?activeOnly=true`);
+        const apiUrl = `${API_URL.BASE}/api/banners?activeOnly=true`;
+        console.log('BannerSlider: Fetching from:', apiUrl);
+        console.log('BannerSlider: API_URL.BASE is:', API_URL.BASE);
+        
+        const res = await fetch(apiUrl);
+        
+        if (!res.ok) {
+          console.error('BannerSlider: API response not OK:', res.status, res.statusText);
+          if (isMounted) {
+            const staticBanners = getActiveBanners(language);
+            setBannerImages(staticBanners);
+            setLoading(false);
+          }
+          return;
+        }
+        
         const data = await res.json();
+        console.log('BannerSlider: API response:', data);
+        
         if (isMounted && data && data.success) {
           const mapped = (data.data || []).map(item => {
             const title = language === 'mr' ? (item.titleMr || item.title) : (item.titleEn || item.title);
@@ -36,16 +53,23 @@ export default function BannerSlider() {
           });
           // Sort by order
           mapped.sort((a, b) => a.order - b.order);
+          console.log('BannerSlider: Mapped banners:', mapped.length);
           setBannerImages(mapped);
           setLoading(false);
+        } else {
+          console.warn('BannerSlider: API returned no data or unsuccessful:', data);
+          if (isMounted) {
+            const staticBanners = getActiveBanners(language);
+            setBannerImages(staticBanners);
+            setLoading(false);
+          }
         }
       } catch (e) {
-        // Fail silently and use static banners as fallback
-        console.warn('Failed to load banners from API, using static banners', e);
+        console.error('BannerSlider: Failed to load banners from API:', e);
         if (isMounted) {
-    const staticBanners = getActiveBanners(language);
-    setBannerImages(staticBanners);
-    setLoading(false);
+          const staticBanners = getActiveBanners(language);
+          setBannerImages(staticBanners);
+          setLoading(false);
         }
       }
     })();

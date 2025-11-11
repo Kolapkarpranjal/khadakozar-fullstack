@@ -13,37 +13,51 @@ export default function MembersSection() {
       try {
         setLoading(true);
         
+        const apiUrl = API_URL.MEMBERS;
+        console.log('MembersSection: Fetching from:', apiUrl);
+        console.log('MembersSection: API_URL.BASE is:', API_URL.BASE);
+        
         // Fetch members from API only
-        const response = await fetch(API_URL.MEMBERS);
-        if (response.ok) {
-          const result = await response.json();
-          if (result.success && result.data && result.data.length > 0) {
-            // Transform API data to match component format
-            const members = result.data
-              .filter(member => member.isActive)
-              .map(member => ({
-                _id: member._id,
-                memberName: language === 'mr' ? member.memberNameMarathi : member.memberName,
-                memberDesignation: language === 'mr' ? member.memberDesignationMarathi : member.memberDesignation,
-                imageUrl: member.imageUrl.startsWith('http') 
-                  ? member.imageUrl 
-                  : `${API_URL.BASE}${member.imageUrl}`,
-                order: member.order || 999,
-                isActive: member.isActive
-              }))
-              .sort((a, b) => a.order - b.order); // Sort by order
-              
-            setMemberImages(members);
-            setLoading(false);
-            return;
-          }
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          console.error('MembersSection: API response not OK:', response.status, response.statusText);
+          setMemberImages([]);
+          setLoading(false);
+          return;
+        }
+        
+        const result = await response.json();
+        console.log('MembersSection: API response:', result);
+        
+        if (result.success && result.data && result.data.length > 0) {
+          // Transform API data to match component format
+          const members = result.data
+            .filter(member => member.isActive)
+            .map(member => ({
+              _id: member._id,
+              memberName: language === 'mr' ? member.memberNameMarathi : member.memberName,
+              memberDesignation: language === 'mr' ? member.memberDesignationMarathi : member.memberDesignation,
+              imageUrl: member.imageUrl.startsWith('http') 
+                ? member.imageUrl 
+                : `${API_URL.BASE}${member.imageUrl}`,
+              order: member.order || 999,
+              isActive: member.isActive
+            }))
+            .sort((a, b) => a.order - b.order); // Sort by order
+          
+          console.log('MembersSection: Mapped members:', members.length);
+          setMemberImages(members);
+          setLoading(false);
+          return;
         }
         
         // If API fails or returns no data, show empty state
+        console.warn('MembersSection: No members found in API response');
         setMemberImages([]);
         setLoading(false);
       } catch (error) {
-        console.error('Error loading members:', error);
+        console.error('MembersSection: Error loading members:', error);
         setMemberImages([]);
         setLoading(false);
       }
