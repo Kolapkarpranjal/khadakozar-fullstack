@@ -25,29 +25,19 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
-// CORS configuration
-// Allow all origins in production, or specific ones if NODE_ENV is set
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? [
-      'https://khadakozar-fullstack-production.up.railway.app',
-      'https://khadak-ozar-grampanchayat.netlify.app',
-      'https://grampanchayatkhadakozar.com',
-      'https://www.grampanchayatkhadakozar.com'
-    ] 
-  : ['http://localhost:3000', 'http://localhost:5000'];
-
+// CORS configuration - Allow all origins in production for now
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // Check if origin is in allowed list
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // In production, allow all origins (for client delivery)
+    if (process.env.NODE_ENV === 'production') {
       callback(null, true);
     } else {
-      // In production, log but allow (for debugging)
-      if (process.env.NODE_ENV === 'production') {
-        console.log('CORS: Allowing origin:', origin);
+      // In development, only allow localhost
+      const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000'];
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -56,7 +46,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Body parsing middleware - increased limit for file uploads
