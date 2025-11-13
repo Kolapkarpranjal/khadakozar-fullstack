@@ -248,17 +248,17 @@
     "imageAlt": "Khadakozar Grampanchayat",
     "villageOverview": {
       "title": "Khadakozar Village - A Glance",
-      "description": "Khadakozar Grampanchayat is a rural self-government institution under Nashik Zilla Parishad, Chandwad Panchayat Samiti. The village has a population of 3487, with Khadakozar being the main village and Gurhale settlement being separate."
+      "description": "Khadakozar Grampanchayat is a rural self-government institution under Nashik Zilla Parishad, Chandwad Panchayat Samiti. The village has a population of 3965 (current status), with Khadakozar being the main village and Gurhale settlement being separate."
     },
     "statistics": {
       "title": "🌾 Grampanchayat Area",
       "items": [
-        { "value": "1022.85 sq km", "label": "Grampanchayat Area" },
+        { "value": "18.18 sq km", "label": "Grampanchayat Area" },
         { "value": "4", "label": "🏢 Wards" },
-        { "value": "673", "label": "👥 Family Count" },
-        { "value": "1784", "label": "👥 Male Population" },
-        { "value": "1703", "label": "👥 Female Population" },
-        { "value": "3487", "label": "👥 Total Population" }
+        { "value": "809", "label": "👥 Family Count" },
+        { "value": "2051", "label": "👥 Male Population" },
+        { "value": "1914", "label": "👥 Female Population" },
+        { "value": "3965", "label": "👥 Total Population" }
       ]
     },
     "facilities": {
@@ -359,10 +359,10 @@
       "landInfo": {
         "title": "Village Total Area",
         "items": [
-          { "label": "Village Total Area", "value": "448.14 hectares" },
+          { "label": "Village Total Area", "value": "1818.18 hectares" },
           { "label": "Irrigated Area", "value": "370.25" },
           { "label": "Non-irrigated Area", "value": "28.00" },
-          { "label": "Number of Landholders", "value": "498" }
+          { "label": "Number of Landholders", "value": "1160" }
         ]
       },
       "areaInfo": {
@@ -485,7 +485,7 @@
     "areaInfo": {
       "title": "Village Area Information",
       "items": [
-        { "label": "Total Area", "value": "394.37 hectares" },
+        { "label": "Total Area", "value": "1818.18 hectares" },
         { "label": "Village Settlement Area", "value": "3.39 hectares" },
         { "label": "Cultivable Area", "value": "354.11 hectares" },
         { "label": "Average Annual Rainfall", "value": "1000 mm" }
